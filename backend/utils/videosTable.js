@@ -1,13 +1,13 @@
 import sequelize from '../middlewares/db.js';
 import { DataTypes, Op } from 'sequelize';
 
-export const Images = sequelize.define(
-  "Images",
+export const Videos = sequelize.define(
+  "Videos",
   {
     petID: {
       type: DataTypes.INTEGER,
     },
-    url: {
+    videos: {
       type: DataTypes.STRING,
     },
   },

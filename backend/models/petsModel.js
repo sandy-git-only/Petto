@@ -1,5 +1,6 @@
 import { Pets } from "../utils/petsTable.js";
 import { Images } from "../utils/imagesTable.js";
+import { Videos } from "../utils/videosTable.js";
 import sequelize from "../middlewares/db.js";
 
 Images.removeAttribute("id");
@@ -19,6 +20,14 @@ export async function insertPetsTable(petsData) {
 export async function insertImageTable(imagesUrl) {
   try {
     const imagesResponse = await Images.create(imagesUrl);
+    return imagesResponse;
+  } catch (error) {
+    console.error("pets images insertion error", error);
+  }
+}
+export async function insertVediosTable(videosUrl) {
+  try {
+    const imagesResponse = await Images.create(videosUrl);
     return imagesResponse;
   } catch (error) {
     console.error("pets images insertion error", error);
@@ -44,5 +53,61 @@ export async function getPetsDetailById(id) {
   } catch (error) {
     console.error("Error retrieving product details:", error);
     return null;
+  }
+}
+
+export async function getPetsByCondition(
+  conditionType,
+  conditionValue,
+  perPageItems,
+  itemIndex
+) {
+  try {
+    const validConditionTypes = ["gender", "location"];
+    console.log(conditionValue)
+    const condition = { [conditionType]: conditionValue };
+    const pets = await Pets.findAll({
+      where: condition ?  condition  : {},
+      limit: perPageItems,
+      offset: itemIndex,
+      include: [
+        {
+          model: Images,
+          as: "images",
+          attributes: ["url"],
+        },
+      ],
+    });
+
+    const result = await Promise.all(
+      pets.map(async (pet) => {
+        const images = await Images.findAll({
+          where: { petID: pet.id },
+        });
+        return {
+          ...pet.toJSON(),
+          images: images,
+        };
+      })
+    );
+
+    return result;
+  } catch (error) {
+    console.error("getPetsByConditonerror:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+}
+
+export async function getPetsByConditionCount(conditionType, conditionValue) {
+  try {
+    const validConditionTypes = ["gender", "location"];
+    const condition = { [conditionType]: conditionValue };
+    const countResult = await Pets.count({
+      where: condition ?  condition  : {},
+    });
+    return countResult;
+  } catch (error) {
+    console.error("getPetsByConditionCount error:", error);
+    throw error; // Rethrow the error to be handled by the caller
   }
 }

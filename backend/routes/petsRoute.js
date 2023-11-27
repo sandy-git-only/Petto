@@ -3,7 +3,7 @@ import AWS from "aws-sdk";
 import multer from "multer";
 const router = express.Router();
 const upload = multer();
-import { createPetsInfo, reqPetsDetailById }  from "../controllers/petsController.js";
+import { createPetsInfo, reqPetsDetailById, reqPetsByCondition }  from "../controllers/petsController.js";
 
 router.post("/create",
   upload.fields([
@@ -51,10 +51,11 @@ router.post("/create",
 
 router.get("/");
 // router.get('/all', (req, res) => { getCategoryProduct(req, res) } );
-// router.get('/women', (req, res) => { getCategoryProduct(req, res, "women") });
-// router.get('/men',(req, res) => { getCategoryProduct(req, res, "men")});
+router.get('/gender/:gender', (req, res) =>  reqPetsByCondition(req, res, 'gender',req.params.gender));
+router.get('/location/:location', (req, res) =>  reqPetsByCondition(req, res,'location', req.params.location));
+
 // router.get('/accessories' , (req, res) => { getCategoryProduct(req, res, "accessories")});
 // router.get('/search',(req, res) => { searchProduct (req, res) });
-router.get('/details', (req, res) => { reqPetsDetailById(req, res) });
+router.get('/details', (req, res) =>  reqPetsDetailById(req, res));
 
 export { router };

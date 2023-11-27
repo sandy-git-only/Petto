@@ -2,6 +2,8 @@ import {
   insertPetsTable,
   insertImageTable,
   getPetsDetailById,
+  getPetsByCondition,
+  getPetsByConditionCount
 } from "../models/petsModel.js";
 import redisCache from "../middlewares/redis.js";
 
@@ -46,7 +48,6 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
     const imagesData = {
       petID: insertId,
       url: url,
-      video: "null",
     };
     return insertImageTable(imagesData);
   });
@@ -113,6 +114,49 @@ export async function reqPetsDetailById(req, res) {
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error Response");
+  }
+}
+
+
+export async function reqPetsByCondition(req, res, conditionType, conditionValue) {
+  const page = parseInt(req.query.paging) || 0;
+  const perPageItems = 8;
+  const itemIndex = page * perPageItems;
+  let result = await getPetsByCondition(conditionType, conditionValue, perPageItems, itemIndex);
+  const countResult = await getPetsByConditionCount(conditionType,conditionValue);
+  const allProductPages = Math.ceil(countResult / perPageItems);
+  
+  try {
+    const response = {
+      data: result.map((pet) => {
+        return {
+          id: pet.id,
+          animalClass: pet.animalClass,
+          name: pet.name,
+          type: pet.type,
+          location: pet.location,
+          gender: pet.gender,
+          age: pet.age,
+          anthel: pet.anthel,
+          vaccine: pet.vaccine,
+          ligation: pet.ligation,
+          description: pet.description,
+          color: pet.color,
+          userID: pet.userID,
+          main_image: pet.main_image,
+          images: pet.images.map(image => image.url),
+          // videos: pet.images.map(image => image.video)
+        };
+      }),
+    };
+    if (allProductPages - 1 > page) {
+      response.next_paging = page + 1;
+    }
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "product paging error" });
   }
 }
 // async function getCategoryProduct(req, res, category) {
