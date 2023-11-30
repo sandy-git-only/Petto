@@ -50,7 +50,7 @@ router.post("/create",
 );
 
 router.get("/");
-// router.get('/all', (req, res) => { getCategoryProduct(req, res) } );
+router.get('/all', (req, res) =>  reqPetsByCondition(req, res) );
 router.get('/gender/:gender', (req, res) =>  reqPetsByCondition(req, res, 'gender',req.params.gender));
 router.get('/location/:location', (req, res) =>  reqPetsByCondition(req, res,'location', req.params.location));
 

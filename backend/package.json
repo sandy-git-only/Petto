@@ -10,12 +10,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-sns": "^3.462.0",
+    "@aws-sdk/credential-provider-ini": "^3.460.0",
     "aws-sdk": "^2.1503.0",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "google-auth-library": "^9.2.0",
     "ioredis": "^5.3.2",
+    "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.6.5",
+    "request": "^2.88.2",
     "sequelize": "^6.35.1"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2"
   }
 }

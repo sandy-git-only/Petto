@@ -1,6 +1,5 @@
 import { Pets } from "../utils/petsTable.js";
 import { Images } from "../utils/imagesTable.js";
-import { Videos } from "../utils/videosTable.js";
 import sequelize from "../middlewares/db.js";
 
 Images.removeAttribute("id");
@@ -25,6 +24,7 @@ export async function insertImageTable(imagesUrl) {
     console.error("pets images insertion error", error);
   }
 }
+
 export async function insertVediosTable(videosUrl) {
   try {
     const imagesResponse = await Images.create(videosUrl);
@@ -64,10 +64,12 @@ export async function getPetsByCondition(
 ) {
   try {
     const validConditionTypes = ["gender", "location"];
-    console.log(conditionValue)
-    const condition = { [conditionType]: conditionValue };
+    console.log("conditionValue",conditionValue)
+    const condition = validConditionTypes.includes(conditionType)
+  ? { [conditionType]: conditionValue }
+  : {};
     const pets = await Pets.findAll({
-      where: condition ?  condition  : {},
+      where: condition ,
       limit: perPageItems,
       offset: itemIndex,
       include: [
@@ -101,9 +103,11 @@ export async function getPetsByCondition(
 export async function getPetsByConditionCount(conditionType, conditionValue) {
   try {
     const validConditionTypes = ["gender", "location"];
-    const condition = { [conditionType]: conditionValue };
+    const condition = validConditionTypes.includes(conditionType)
+  ? { [conditionType]: conditionValue }
+  : {};
     const countResult = await Pets.count({
-      where: condition ?  condition  : {},
+      where: condition
     });
     return countResult;
   } catch (error) {

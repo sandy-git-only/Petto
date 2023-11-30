@@ -6,10 +6,24 @@ export const Images = sequelize.define(
   {
     petID: {
       type: DataTypes.INTEGER,
+      references: {
+        model: "Pets", 
+        key: "id",
+      },
     },
     url: {
       type: DataTypes.STRING,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false,
+    },
   },
-  { timestamps: false }
+  { timestamps: true }
 );

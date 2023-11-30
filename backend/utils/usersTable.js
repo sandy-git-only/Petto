@@ -2,7 +2,7 @@ import sequelize from '../middlewares/db.js';
 import { DataTypes, Op } from 'sequelize';
 
 
-const Users = sequelize.define('Users', {
+export const Users = sequelize.define('Users', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -11,7 +11,6 @@ const Users = sequelize.define('Users', {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
@@ -20,10 +19,20 @@ const Users = sequelize.define('Users', {
     },
     password:{
       type: DataTypes.STRING,
+    },
+    provider:{
+      type: DataTypes.STRING,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
       allowNull: false,
     },
-    provide:{
-      type: DataTypes.STRING,
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
       allowNull: false,
-    }
-  });
+    },
+  },
+  { timestamps: false }
+  );

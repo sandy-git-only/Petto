@@ -9,8 +9,8 @@ import redisCache from "../middlewares/redis.js";
 
 export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
   const requestData = await req.body;
-
   const {
+    category,
     animalClass,
     name,
     type,
@@ -22,11 +22,13 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
     ligation,
     description,
     color,
+    feature,
     userID,
   } = requestData;
 
   //注意:sequelize input是"object" 不是 array
   const petsData = {
+    category: category,
     animalClass: animalClass,
     name: name,
     type: type,
@@ -38,6 +40,7 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
     ligation: ligation,
     description: description,
     color: color,
+    feature:feature,
     userID: userID,
     main_image: mainImageDataUrl,
   };
@@ -54,6 +57,8 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
 
   try {
     const successfullResponse = {
+      id: insertId,
+      category: category,
       animalClass: animalClass,
       name: name,
       type: type,
@@ -65,9 +70,11 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
       ligation: ligation,
       description: description,
       color: color,
+      feature: feature,
       userID: userID,
       main_image: mainImageDataUrl,
       images: imageUrlsArray,
+      createdAt: petsResponse.createdAt
     };
     res.status(200).json(successfullResponse);
   } catch (error) {
@@ -80,6 +87,7 @@ function formatRes(pet, images) {
   const image = images.map((image) => image.url);
   const petsFormat = {
     id: pet.id,
+    category: pet.category,
     animalClass: pet.animalClass,
     name: pet.name,
     type: pet.type,
@@ -91,6 +99,7 @@ function formatRes(pet, images) {
     ligation: pet.ligation,
     description: pet.description,
     color: pet.color,
+    feature: pet.feature,
     userID: pet.userID,
     main_image: pet.main_image,
     images: image,
@@ -122,15 +131,26 @@ export async function reqPetsByCondition(req, res, conditionType, conditionValue
   const page = parseInt(req.query.paging) || 0;
   const perPageItems = 8;
   const itemIndex = page * perPageItems;
-  let result = await getPetsByCondition(conditionType, conditionValue, perPageItems, itemIndex);
-  const countResult = await getPetsByConditionCount(conditionType,conditionValue);
-  const allProductPages = Math.ceil(countResult / perPageItems);
+  let result;
+  let countResult;
+  if (conditionValue) {
+    result = await getPetsByCondition(conditionType, conditionValue, perPageItems, itemIndex);
+    countResult = await getPetsByConditionCount(conditionType,conditionValue);
+  } else {
+    let conditionType = null;
+    let conditionValue = null;
+    result = await getPetsByCondition(conditionType,conditionValue ,perPageItems, itemIndex);
+    countResult = await getPetsByConditionCount();
+  };
   
+  const allProductPages = Math.ceil(countResult / perPageItems);
+  console.log("allProductPages",allProductPages);
   try {
     const response = {
       data: result.map((pet) => {
         return {
           id: pet.id,
+          category: pet.category,
           animalClass: pet.animalClass,
           name: pet.name,
           type: pet.type,
@@ -142,6 +162,7 @@ export async function reqPetsByCondition(req, res, conditionType, conditionValue
           ligation: pet.ligation,
           description: pet.description,
           color: pet.color,
+          feature: pet.feature,
           userID: pet.userID,
           main_image: pet.main_image,
           images: pet.images.map(image => image.url),
@@ -159,98 +180,3 @@ export async function reqPetsByCondition(req, res, conditionType, conditionValue
     res.status(500).json({ error: "product paging error" });
   }
 }
-// async function getCategoryProduct(req, res, category) {
-//   const page = parseInt(req.query.paging) || 0;
-//   const perPageItems = 6;
-//   const itemIndex = page * perPageItems;
-//   let result = await getProductByCategory(category, perPageItems, itemIndex);
-//   const countResult = await getProductCountByCategory(category);
-//   allProductPages = Math.ceil(countResult / perPageItems);
-//   console.log(result);
-//   try {
-//     const response = {
-//       data: result.map((product) => {
-//         const colors = product.Variants.map((variant) => ({
-//           color: variant.Colors.name,
-//           code: variant.Colors.code,
-//         }));
-//         const variants = product.Variants.map((variant) => ({
-//           id: variant.productID,
-//           color_code: variant.color_code,
-//           size: variant.size,
-//           stock: variant.stock,
-//         }));
-
-//         return {
-//           id: product.id,
-//           category: product.category,
-//           title: product.title,
-//           description: product.description,
-//           price: product.price,
-//           texture: product.texture,
-//           wash: product.wash,
-//           place: product.place,
-//           note: product.note,
-//           story: product.story,
-//           colors,
-//           sizes: product.sizes,
-//           variants,
-//           main_image: product.main_image,
-//           images: [product.Images[0].url],
-//         };
-//       }),
-//     };
-
-//     if (allProductPages - 1 > page) {
-//       response.next_paging = page + 1;
-//     }
-
-//     res.status(200).json(response);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "product paging error" });
-//   }
-// }
-
-// async function searchProduct(req, res) {
-//   const keyword = req.query.keyword;
-//   const result = await searchProductByKeyword(keyword)
-//   try {
-//     const response = {
-//       data: result.map((product) => {
-//         const colors = product.Variants.map((variant) => ({
-//           color: variant.Colors.name,
-//           code: variant.Colors.code,
-//         }));
-//         const variants = product.Variants.map((variant) => ({
-//           id: variant.productID,
-//           color_code: variant.color_code,
-//           size: variant.size,
-//           stock: variant.stock,
-//         }));
-
-//         return {
-//           id: product.id,
-//           category: product.category,
-//           title: product.title,
-//           description: product.description,
-//           price: product.price,
-//           texture: product.texture,
-//           wash: product.wash,
-//           place: product.place,
-//           note: product.note,
-//           story: product.story,
-//           colors,
-//           sizes: product.sizes,
-//           variants,
-//           main_image: product.main_image,
-//           images: [product.Images[0].url],
-//         };
-//       }),
-//     };
-//     res.status(200).json(response);
-//   } catch (err) {
-//     console.error(err);
-//   }
-
-// }

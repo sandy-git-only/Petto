@@ -2,6 +2,9 @@
 import express from 'express';
 const app = express();
 import { router as petsRouter } from './routes/petsRoute.js'
+import { router as usersRouter } from './routes/usersRoute.js'
+import { router as matchRouter } from './routes/matchRoute.js'
+
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -15,8 +18,8 @@ app.use(express.json());
 
 const API_VERSION = "1.0"
 app.use(`/api/${API_VERSION}/pets`, petsRouter )  ;
-// app.use(`/api/${API_VERSION}/users`, userRouter ) ;
-// app.use(`/api/${API_VERSION}/likes`,  ) ;
+app.use(`/api/${API_VERSION}/users`, usersRouter ) ;
+app.use(`/api/${API_VERSION}/matches`, matchRouter ) ;
 // app.use(`/api/${API_VERSION}/matches`,  ) ;
 
 

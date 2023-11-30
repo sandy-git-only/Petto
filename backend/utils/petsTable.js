@@ -9,6 +9,9 @@ export const Pets = sequelize.define(
         primaryKey: true,
         autoIncrement: true,
       },
+      category: {
+        type: DataTypes.STRING,
+      },
       animalClass: {
         type: DataTypes.STRING,
       },
@@ -42,16 +45,29 @@ export const Pets = sequelize.define(
       color: {
         type: DataTypes.STRING,
       },
+      feature:{
+        type: DataTypes.STRING,
+      },
       main_image: {
         type: DataTypes.STRING,
       },
       userID: {
         type: DataTypes.INTEGER,
-        // references: {
-        //   model: "Users", 
-        //   key: "id",
-        // },
+        references: {
+          model: "Users", 
+          key: "id",
+        },
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        allowNull: false,
       },
     },
-    { timestamps: false }
+    { timestamps: true }
   );
