@@ -61,13 +61,13 @@ export const Pets = sequelize.define(
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
-        allowNull: false,
+        allowNull: true,
       },
       updatedAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
-        allowNull: false,
+        allowNull: true,
       },
     },
-    { timestamps: true }
+    { timestamps: false }
   );

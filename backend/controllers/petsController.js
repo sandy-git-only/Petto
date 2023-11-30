@@ -74,7 +74,6 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
       userID: userID,
       main_image: mainImageDataUrl,
       images: imageUrlsArray,
-      createdAt: petsResponse.createdAt
     };
     res.status(200).json(successfullResponse);
   } catch (error) {
