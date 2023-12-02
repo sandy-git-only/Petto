@@ -80,7 +80,7 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
     console.error("Error inserting pet information", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-}
+};
 
 function formatRes(pet, images) {
   const image = images.map((image) => image.url);
@@ -104,7 +104,7 @@ function formatRes(pet, images) {
     images: image,
   };
   return petsFormat;
-}
+};
 
 export async function reqPetsDetailById(req, res) {
   const id = req.query.id;
@@ -123,7 +123,7 @@ export async function reqPetsDetailById(req, res) {
     console.error(error);
     res.status(500).send("Server Error Response");
   }
-}
+};
 
 
 export async function reqPetsByCondition(req, res, conditionType, conditionValue) {
@@ -178,4 +178,4 @@ export async function reqPetsByCondition(req, res, conditionType, conditionValue
     console.error(error);
     res.status(500).json({ error: "product paging error" });
   }
-}
+};

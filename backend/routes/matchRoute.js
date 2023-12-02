@@ -1,30 +1,100 @@
 import express from 'express';
-import  { createNotifications }  from '../controllers/matchController.js';
+import  { createNotifications, publishMatched }  from '../controllers/matchController.js';
 const router = express.Router();import { auth } from 'google-auth-library';
+import AWS from "aws-sdk";
+
+// const creds = new AWS.SharedIniFileCredentials({profile: 'default'});
+// const sns = new AWS.SNS({creds, region:"ap-northeast-1"});
 
 
-router.post('/', (req, res) =>  createNotifications(req, res) );
-// router.get('/notifications', (req, res) =>  userProfile (req, res));
-router.get('/', (req, res) =>  {
-    console.log(req.query.message);
-    console.log("Number = " + req.query.number);
-    console.log("Subject = " + req.query.subject);
-    console.log("Sender= " + req.query.sender);
+
+
+// router.post('/', (req, res) =>  createNotifications(req, res) );
+
+// check if sns status is ok
+router.get('/status', (req, res) =>  res.send({status: "ok", sns}));
+ 
+router.post('/subscribe', async (req, res) =>{
+    const snsEmail = await createNotifications(req, res);
     let params = {
-        Message: req.query.message, //簡訊內容
-        PhoneNumber: '+' + req.query.number,
-        MessageAttributes: {
-            //Ref for MessageAttributes:   
-            //https://docs.aws.amazon.com/sns/latest/dg/sms_publish-to-phone.html#sms_publish_sdk
-            'AWS.SNS.SMS.SenderID': {
-              'DataType': 'String',
-              'StringValue': req.query.sender //訊息要顯示的寄件者名稱
-        // 'StringValue' is the name of sender appears in the message.It must be 1-11 alpha-numeric characters
-            // 要注意 req.query.sender 寄件者名稱長度不可超過11個字
-            // 會引發的錯誤訊息可參考下面註解
+        Protocol:"EMAIL",
+        TopicArn:'arn:aws:sns:ap-northeast-1:220687070155:Petto',
+        Endpoint: snsEmail
+    }
+    sns.subscribe(params, (err, data)=>{
+        if(err) console.error(err)
+        res.send(data)
+    })
+})
+
+
+const sesConfig = {
+    sesAccessKey:process.env.SNS_ACCESS_KEY,
+    sesSecretKey:process.env.SNS_SECRET_KEY,
+    region:process.env.SES_REGION
+}
+const AWS_SES = new AWS.SES(sesConfig)
+
+const sendEmail = async(recipientEmail,petsNum) =>{
+    let params = {
+        Source: process.env.AWS_SES_SENDER,
+        Destination:{
+            ToAddresses: [
+                recipientEmail
+            ],
+        },
+        ReplyToAddresses:[],
+        Message:{
+            Body:{
+                Html:{
+                    Charset: "UTF-8",
+                    Data:'<h1> This is the body </h1>',
+                },
+                Text:{
+                    Charset: "UTF-8",
+                    Data:'<h1> This is the text </h1>',
+                }
+            },
+            Subject:{
+                Charset: "UTF-8",
+                Data:`Petto: You have ${petsNum} matches`,
             }
         }
     }
+    try{
+        const res = await AWS_SES.sendEmail(params).promise();
+        console.log("Email has been sent", res);
+    } catch(e){
+        console.error(e);
+    }
+}
+
+
+router.post('/publish', async (req, res)=>{
+    const userPetsNumMap = await publishMatched(req, res);
+    
+    userPetsNumMap.forEach(async (userPetNum) => {
+    sendEmail(userPetNum.snsEmail,userPetNum.petsNum);
+        
+
+
+    // const subject = "Petto - 寵物成功配對通知" ;
+    // const message = 
+    // `您好，您等待已久的寵物出現囉！
+    // 出現了 ${petsNum} 隻寵物，
+    // 與你喜歡的寵物來場拍拖，
+    // 給他一個溫暖的家吧 !
+    // 請到Petto個人頁面查看：https://www.petto.com/user`;
+    // let params = {
+    //     Subject: subject,
+    //     Message: message,
+    //     TopicArn: `arn:aws:sns:ap-northeast-1:220687070155:Petto`, 
+    // };
+    // sns.publish(params, (err, data)=>{
+    //     if(err) console.error(err)
+    //     res.send(data)
+    // })
 });
- 
+})
+
 export { router };

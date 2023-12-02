@@ -25,5 +25,5 @@ export const Images = sequelize.define(
       allowNull: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true, }
 );

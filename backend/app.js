@@ -4,7 +4,7 @@ const app = express();
 import { router as petsRouter } from './routes/petsRoute.js'
 import { router as usersRouter } from './routes/usersRoute.js'
 import { router as matchRouter } from './routes/matchRoute.js'
-
+import cors from 'cors'
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -13,7 +13,7 @@ dotenv.config();
 app.use(express.json());
 
 // Enable CORS
-// app.use(cors());
+app.use(cors());
 
 
 const API_VERSION = "1.0"
