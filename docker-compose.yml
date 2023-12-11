@@ -30,7 +30,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
     networks:
-      - stylish_network
+      - petto_network
   redis:
     image: redis
     ports:
