@@ -22,11 +22,21 @@ services:
     ports:
       - ${BACKEND_PORT}:3000
     depends_on:
+      - redis
       - nginx
     volumes:
       - ./backend:/app
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     networks:
-      - petto_network
+      - stylish_network
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+    - petto_network
 
   nginx:
     image: nginx
@@ -37,6 +47,7 @@ services:
       - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf
       - /etc/ssl/certificate.cer:/etc/ssl/certificate.cer
       - /etc/ssl/private_key.key:/etc/ssl/private_key.key
+    
     networks:
       - petto_network
 
