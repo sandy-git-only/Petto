@@ -25,9 +25,6 @@ services:
       - nginx
     volumes:
       - ./backend:/app
-    environment:
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
     networks:
       - petto_network
 
