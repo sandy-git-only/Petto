@@ -54,22 +54,20 @@ export async function getPetsDetailById(id) {
     console.error("Error retrieving product details:", error);
     return null;
   }
-}
+};
 
 export async function getPetsByCondition(
-  conditionType,
   conditionValue,
   perPageItems,
   itemIndex
 ) {
   try {
-    const validConditionTypes = ["gender", "location"];
-    console.log("conditionValue",conditionValue)
-    const condition = validConditionTypes.includes(conditionType)
-  ? { [conditionType]: conditionValue }
-  : {};
+    // const validConditionTypes = ["gender", "location"];
+  //   const condition = validConditionTypes.includes(conditionType)
+  // ? { [conditionType]: conditionValue }
+  // : {};
     const pets = await Pets.findAll({
-      where: condition ,
+      where: conditionValue ,
       limit: perPageItems,
       offset: itemIndex,
       include: [
@@ -100,14 +98,14 @@ export async function getPetsByCondition(
   }
 }
 
-export async function getPetsByConditionCount(conditionType, conditionValue) {
+export async function getPetsByConditionCount(conditionValue) {
   try {
-    const validConditionTypes = ["gender", "location"];
-    const condition = validConditionTypes.includes(conditionType)
-  ? { [conditionType]: conditionValue }
-  : {};
+  //   const validConditionTypes = ["gender", "location"];
+  //   const condition = validConditionTypes.includes(conditionType)
+  // ? { [conditionType]: conditionValue }
+  // : {};
     const countResult = await Pets.count({
-      where: condition
+      where: conditionValue
     });
     return countResult;
   } catch (error) {

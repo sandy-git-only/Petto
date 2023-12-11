@@ -1,5 +1,5 @@
 import { Notifications } from "../utils/notificationsTable.js";
-import { Op,Sequelize } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import sequelize from "../middlewares/db.js";
 import { Users } from "../utils/usersTable.js";
 import { Matches } from "../utils/matchesTable.js";
@@ -13,11 +13,22 @@ export async function insertNotificationsTable(notificationsData) {
   }
 }
 
-async function insertMatchesTable(matchesData) {
+export async function insertMatchesTable(matchesData) {
   try {
-    const matchesResponse = await Notifications.create(matchesData);
-    console.log("Matched result created", matchesResponse);
-    return notificationsResponse;
+    const existingMatch = await Matches.findOne({
+      where: {
+        userID: matchesData.userID,
+        petID: matchesData.petID,
+      },
+    });
+    if (!existingMatch) {
+      const matchesResponse = await Matches.create(matchesData);
+      console.log("Matched result created", matchesResponse);
+      return matchesResponse;
+    } else {
+      console.log("Matched result already exists", existingMatch);
+      return existingMatch;
+    }
   } catch (error) {
     console.error("Matched data insertion error", error);
   }
@@ -32,47 +43,41 @@ export async function findMatchingPets(PetsTable) {
     const matchingResults = notifications.map(async (notification) => {
       const {
         userID,
-        snsEmail,
-        animalClass =  notification.animalClass ,
-        gender = notification.gender ,
-        type = notification.type ,
-        color = notification.color ,
-        location = notification.location ,
+        email,
+        animalClass = notification.animalClass,
+        gender = notification.gender,
+        type = notification.type,
+        color = notification.color,
+        city = notification.city,
+        district = notification.district,
       } = notification;
       const matchingResults = await PetsTable.findAll({
         where: {
           [Op.and]: [
-            animalClass !== null ? { animalClass } : { animalClass: { [Op.not]: null } },
+            animalClass !== null
+              ? { animalClass }
+              : { animalClass: { [Op.not]: null } },
             gender !== null ? { gender } : { gender: { [Op.not]: null } },
             type !== null ? { type } : { type: { [Op.not]: null } },
             color !== null ? { color } : { color: { [Op.not]: null } },
-            location !== null ? { location } : { location: { [Op.not]: null } },
+            city !== null ? { city } : { city: { [Op.not]: null } },
+            district !== null ? { district } : { district: { [Op.not]: null } },
           ],
         },
       });
       const matchedPairs = matchingResults.map((pet) => ({
-        userID,
-        snsEmail,
         petID: pet.id,
-      }
-      ));
+      }));
       var userPetsNumMap = [];
       const petsNum = matchedPairs.length;
-      if (snsEmail ) {
-        userPetsNumMap= { snsEmail, petsNum };
+      if (email) {
+        userPetsNumMap = { userID, email, petsNum , matchedPairs };
       }
-      // console.log(userPetsNumMap);
-      // const uniqueSnsEmails = [...new Set(matchedPairs.map(pair => pair.snsEmail))];
-      // const result = await Matches.bulkCreate(matchedPairs, {
-      //   updateOnDuplicate: ['updatedAt'],
-      //   updateFields: ['updatedAt'],
-      // });
-      // console.log("result",result);
-      return userPetsNumMap
+      return userPetsNumMap;
     });
     const uniqueSnsEmailsArray = await Promise.all(matchingResults);
     const uniqueSnsEmails = uniqueSnsEmailsArray.flat();
-    return uniqueSnsEmails
+    return uniqueSnsEmails;
   } catch (err) {
     console.error(err);
     throw err;

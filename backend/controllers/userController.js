@@ -113,7 +113,20 @@ export async function userSignIn(req, res) {
         email: results[0].email,
         // role: results[0].role,
       };
-      let access_token = generateJWTAceessToken(payload);
+      let access_token;
+      try {
+        const decodedToken = jwt.verify(req.token, process.env.JWT_SECRET); // Use the same secret key used to sign the token
+        if (decodedToken.exp < Date.now() / 1000) {
+          // Token has expired, generate a new one
+          access_token = generateJWTAceessToken(payload);
+        } else {
+          // Token is still valid, use the existing one
+          access_token = req.token;
+        }
+      } catch (verifyError) {
+        // Token verification failed, generate a new one
+        access_token = generateJWTAceessToken(payload);
+      }
       const successResponse = {
         data: {
           access_token: access_token,
@@ -150,6 +163,7 @@ export async function userProfile(req, res) {
       }
       // console.log("getuserProfile:", result);
       const successResponse = {
+        userID:userId,
         provider: "native",
         name: result[0].name,
         email: result[0].email,

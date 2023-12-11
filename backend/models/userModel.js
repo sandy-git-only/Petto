@@ -23,7 +23,7 @@ export async function checkUserFromDB(email) {
   } catch (err) {
     throw err;
   }
-}
+};
 
 export async function getUserProfile(id) {
   try {
@@ -38,7 +38,7 @@ export async function getUserProfile(id) {
 
 export function generateJWTAceessToken(payload) {
   const token = jwt.sign(
-    { payload, exp: Math.floor(Date.now() / 1000) + 3600 },
+    { payload, exp: Math.floor(Date.now() / 1000) + 3600 * 24 },
     process.env.JWT_SECRET
   );
   return token;

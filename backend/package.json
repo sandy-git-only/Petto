@@ -13,6 +13,7 @@
     "@aws-sdk/client-sns": "^3.462.0",
     "@aws-sdk/credential-provider-ini": "^3.460.0",
     "aws-sdk": "^2.1503.0",
+    "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -22,6 +23,9 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.6.5",
+    "node-fetch": "^3.3.2",
+    "path": "^0.12.7",
+    "querystring": "^0.2.1",
     "request": "^2.88.2",
     "sequelize": "^6.35.1"
   },

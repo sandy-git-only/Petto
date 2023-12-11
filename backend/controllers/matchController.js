@@ -1,6 +1,7 @@
 import {
   insertNotificationsTable,
   findUserEmail,
+  insertMatchesTable,
 } from "../models/matchModel.js";
 import { findMatchingPets } from "../models/matchModel.js";
 import { Pets } from "../utils/petsTable.js";
@@ -8,15 +9,15 @@ import { Pets } from "../utils/petsTable.js";
 export async function createNotifications(req, res) {
   try {
     const reqData = await req.body;
-    console.log("reqData",reqData)
     const {
       userID: userID,
-      snsEmail: snsEmail,
+      email: email,
       category: category,
       animalClass: animalClass,
       type: type,
       color: color,
-      location: location,
+      city: city,
+      district: district,
       gender: gender,
     } = reqData;
     const result = await insertNotificationsTable(reqData);
@@ -31,7 +32,7 @@ export async function createNotifications(req, res) {
     //   location: location,
     //   gender: gender,
     // };
-    return snsEmail
+    return email;
     // res.status(200).json(successfullResponse);
   } catch (e) {
     console.error(e);
@@ -40,9 +41,20 @@ export async function createNotifications(req, res) {
 }
 
 export async function publishMatched(req, res) {
-  try{
-  const userPetsNumMap = await findMatchingPets(Pets);
-  return userPetsNumMap
+  try {
+    const userPetsNumMap = await findMatchingPets(Pets);
+    await Promise.all(
+      userPetsNumMap.map(async (userPetNum) => {
+        userPetNum.matchedPairs.map((matchedPair) => {
+          const matchesData = {
+            userID: userPetNum.userID,
+            petID:  matchedPair.petID
+          };
+          insertMatchesTable(matchesData)
+        });
+      })
+    );
+    return userPetsNumMap;
   } catch (e) {
     console.error(e);
   }

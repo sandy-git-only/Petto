@@ -21,7 +21,13 @@ export const Pets = sequelize.define(
     type: {
       type: DataTypes.STRING,
     },
-    location: {
+    city: {
+      type: DataTypes.INTEGER,
+    },
+    district: {
+      type: DataTypes.INTEGER,
+    },
+    address: {
       type: DataTypes.INTEGER,
     },
     gender: {

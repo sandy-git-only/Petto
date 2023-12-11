@@ -6,6 +6,9 @@ import {
   getPetsByConditionCount
 } from "../models/petsModel.js";
 import redisCache from "../middlewares/redis.js";
+import {insertGeoLocationDB}  from "../models/gpsModel.js";
+import {geocoder} from "../middlewares/geocode.js"
+import reqPetsLocations from '../controllers/gpsController.js'
 
 export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
   const requestData = await req.body;
@@ -14,7 +17,9 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
     animalClass,
     name,
     type,
-    location,
+    city,
+    district,
+    address,
     gender,
     age,
     anthel,
@@ -32,7 +37,9 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
     animalClass: animalClass,
     name: name,
     type: type,
-    location: location,
+    city: city,
+    district: district,
+    address: address,
     gender: gender,
     age: age,
     anthel: anthel,
@@ -44,14 +51,32 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
     userID: userID,
     main_image: mainImageDataUrl,
   };
-  const petsResponse = await insertPetsTable(petsData);
-  const insertId = petsResponse.id;
+  
+  const result = await insertPetsTable(petsData);
+  const insertId = result.id;
+  // console.log("location": JSON.parse);
+  // insert into GeoLocation Table
+  const petlocation = result.city + result.district +result.address;
+  const geocode = await geocoder(petlocation);
+  if (geocode) {
+    console.log(geocode.results[0])
+    const geoLocation = geocode.results[0].geometry.location;
+    const geoData = {
+      petID: insertId,
+      lat: geoLocation.lat,
+      lng: geoLocation.lng
+    };
+    const geoResponse = await insertGeoLocationDB(geoData);
+    if(geoResponse){ reqPetsLocations();}
+  }
+  
   const imageUrlsArray = Object.values(imagesUrls);
   const imagesResponse = imageUrlsArray.map(async (url) => {
     const imagesData = {
       petID: insertId,
       url: url,
     };
+    console.log("images",imagesData)
     return insertImageTable(imagesData);
   });
 
@@ -62,7 +87,9 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
       animalClass: animalClass,
       name: name,
       type: type,
-      location: location,
+      city: city,
+      district:district,
+      address: address,
       gender: gender,
       age: age,
       anthel: anthel,
@@ -90,7 +117,7 @@ function formatRes(pet, images) {
     animalClass: pet.animalClass,
     name: pet.name,
     type: pet.type,
-    location: pet.location,
+    address: pet.address,
     gender: pet.gender,
     age: pet.age,
     anthel: pet.anthel,
@@ -101,6 +128,8 @@ function formatRes(pet, images) {
     feature: pet.feature,
     userID: pet.userID,
     main_image: pet.main_image,
+    city: pet.city,
+    district:pet.district,
     images: image,
   };
   return petsFormat;
@@ -126,19 +155,18 @@ export async function reqPetsDetailById(req, res) {
 };
 
 
-export async function reqPetsByCondition(req, res, conditionType, conditionValue) {
+export async function reqPetsByCondition(req, res, conditionValue) {
   const page = parseInt(req.query.paging) || 0;
   const perPageItems = 8;
   const itemIndex = page * perPageItems;
   let result;
   let countResult;
   if (conditionValue) {
-    result = await getPetsByCondition(conditionType, conditionValue, perPageItems, itemIndex);
-    countResult = await getPetsByConditionCount(conditionType,conditionValue);
+    result = await getPetsByCondition( conditionValue, perPageItems, itemIndex);
+    countResult = await getPetsByConditionCount(conditionValue);
   } else {
-    let conditionType = null;
     let conditionValue = null;
-    result = await getPetsByCondition(conditionType,conditionValue ,perPageItems, itemIndex);
+    result = await getPetsByCondition(conditionValue ,perPageItems, itemIndex);
     countResult = await getPetsByConditionCount();
   };
   
@@ -153,7 +181,9 @@ export async function reqPetsByCondition(req, res, conditionType, conditionValue
           animalClass: pet.animalClass,
           name: pet.name,
           type: pet.type,
-          location: pet.location,
+          location: pet.city || pet.district,
+          district: pet.district,
+          address: pet.address,
           gender: pet.gender,
           age: pet.age,
           anthel: pet.anthel,

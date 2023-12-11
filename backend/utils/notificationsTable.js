@@ -30,7 +30,11 @@ export const Notifications = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true
     },
-    location: {
+    city: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    district: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -38,7 +42,7 @@ export const Notifications = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true
     },
-    snsEmail : {
+    email : {
       type: DataTypes.STRING,
       allowNull: false
     },
