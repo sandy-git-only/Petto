@@ -1,6 +1,6 @@
 version: '3.9'
 services:
-  stylish-frontend:
+  petto-frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -15,7 +15,7 @@ services:
     networks:
       - petto_network
 
-  stylish-backend:
+  petto-backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -40,10 +40,9 @@ services:
       - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf
       - /etc/ssl/certificate.cer:/etc/ssl/certificate.cer
       - /etc/ssl/private_key.key:/etc/ssl/private_key.key
-    
     networks:
-      - stylish_network
+      - petto_network
 
 
 networks:
-  stylish_network:
+  petto_network:
