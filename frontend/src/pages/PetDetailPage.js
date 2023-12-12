@@ -45,6 +45,8 @@ const featureImg = "/images/pet-care.png";
 const descriptionImg = "/images/description.png";
 const userImg = "/images/user.png";
 const shelterImg = "/images/shelter.png";
+const ImageDefault = "images/image-default.png";
+
 export function PetDetail() {
   const { id } = useParams();
   const location = useLocation();
@@ -90,7 +92,7 @@ export function PetDetail() {
   });
 
 
-
+ console.log(petData.main_image);
   const handleGenderChange = (e) => {
     setGender(e.target.value);
   };
@@ -102,7 +104,6 @@ export function PetDetail() {
   if (isError) {
     return <p>Error fetching product data</p>;
   }
-
   const Form = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -177,7 +178,7 @@ export function PetDetail() {
   const REACT_APP_MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
   return !fromGovData ? (
     <PageDiv>
-      <Image style={{ borderRadius: "10px" }} src={petData.main_image} />
+      <Image style={{ borderRadius: "10px" }} src={petData.main_image || ImageDefault} />
       <TitleBlock>
         <SubTitleBlock>
           <Name>{petData.name}</Name>
@@ -283,7 +284,7 @@ export function PetDetail() {
     </PageDiv>
   ) : (
     <PageDiv>
-      <Image style={{ borderRadius: "10px" }} src={petData.album_file} />
+      <Image style={{ borderRadius: "10px" }} src={petData.album_file !== undefined ? petData.album_file:ImageDefault} />
       <TitleBlock>
         <SubTitleBlock>
           <Name>{petData.animal_kind === "狗" ? "Dog" : "Cat"} </Name>
@@ -371,13 +372,13 @@ export function PetDetail() {
           style={{ width: "20px", height: "20px" }}
         />
         <Text>
-         收容所電話 {petData.shelter_tel}
+         電話 {petData.shelter_tel}
         </Text>
       </AboutContainer>
       <TitleBlock
         style={{ fontSize: "15px", fontWeight: "bold", marginTop: "5px" }}
       >
-        Where you can adopt me
+        Where You Can Find Me
       </TitleBlock>
       <MapFrame
         src={`https://www.google.com/maps/embed/v1/place?key=${REACT_APP_MAPS_API_KEY}&q=${petData.shelter_address}`}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import axios from 'axios';
 import {
@@ -11,7 +10,8 @@ import {
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-
+import { useContext } from 'react';
+import { AuthContext } from '../../utils/contexts.js';
 const FormGroup = styled.div`
   margin-bottom: 16px;
 `;
@@ -87,7 +87,7 @@ const MatchApplication = () => {
     const [email, setEmail] = useState("");
     const [selectedDistrict, setSelectedDistrict] = useState("");
     const navigate = useNavigate()
-
+    const { user } = useContext(AuthContext);
     const handleDistrictChange = (value) => {
         setSelectedDistrict(value);
     };
@@ -115,7 +115,7 @@ const MatchApplication = () => {
     const city = selectedDistrict[0]
     const district = selectedDistrict[1];
     const data = {
-        userID: "9",
+        userID: user,
         category: category,
         animalClass: petType,
         type: breed === "" ? null : breed,
@@ -129,16 +129,16 @@ const MatchApplication = () => {
         try {
             const url = "http://localhost:3000/api/1.0/matches/subscribe";
             const response = await axios.post(url, data);
-            if (response){
-              await Swal.fire({
-                icon: 'success',
-                title: '申請成功！',
-                text: '等待緣分降臨中...',
-                showConfirmButton: false,
-                timer: 1500, 
-              });
-              const matchResponse = await axios.post("http://localhost:3000/api/1.0/matches/publish");
-              navigate("/members")
+              const matchResponse = await axios.get(`http://localhost:3000/api/1.0/matches/match-user?userID=${user}`);
+              if (response && matchResponse){
+                await Swal.fire({
+                  icon: 'success',
+                  title: '申請成功！',
+                  text: '等待緣分降臨中...',
+                  showConfirmButton: false,
+                  timer: 1500, 
+                });
+              await navigate("/members/match-list")
             }
             console.log(response.data);
           } catch (error) {

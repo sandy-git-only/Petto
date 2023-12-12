@@ -12,17 +12,17 @@ import {
 import LinearProgress from "../components/Global/linearProgress.js";
 import Swal from "sweetalert2";
 import styled from "styled-components";
-
+import { Link } from "react-router-dom";
 const PageDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
   height: 100vh;
-  padding: 10px;
+  /* padding: 10px; */
 `;
 const containerStyle = {
-  width: "80%",
+  width: "100%",
   height: "500px",
 };
 
@@ -93,14 +93,14 @@ const markers = await geojsonData.features.map((feature) => ({
   },
 }));
 
-function GoogleMapBlock({ closedPets, setClosedPets, onLoad }) {
+function GoogleMapBlock({ closedPets, setClosedPets, onLoad,activeMarker,setActiveMarker }) {
   const [libraries] = useState(["geometry"]);
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GPS_API_KEY,
     libraries,
   });
-  const [activeMarker, setActiveMarker] = useState(null);
+  
   const [map, setMap] = React.useState(null);
   const [userCenter, setUserCenter] = useState("");
 
@@ -151,7 +151,9 @@ function GoogleMapBlock({ closedPets, setClosedPets, onLoad }) {
         );
       if (distanceResult < 50000) {
         availablePets.push({ marker: marker, distance: distanceResult });
-        setClosedPets(availablePets);
+        availablePets.sort((a, b) => a.distance - b.distance);
+        setClosedPets([...availablePets]);
+        // setClosedPets(availablePets);
       }
     });
     // setClosedPets(availablePets);
@@ -188,6 +190,7 @@ function GoogleMapBlock({ closedPets, setClosedPets, onLoad }) {
                     alignItems: "center",
                   }}
                 >
+                <Link to={`/pets/details/${marker.id}`}>
                   <img
                     src={marker.img}
                     alt="marker-petimg"
@@ -197,7 +200,7 @@ function GoogleMapBlock({ closedPets, setClosedPets, onLoad }) {
                       borderRadius: "50%",
                       objectFit: "cover",
                     }}
-                  />
+                  /></Link>
                   <div style={{
                       display: "flex",
                       flexDirection:"column",
@@ -222,7 +225,6 @@ function GoogleMapBlock({ closedPets, setClosedPets, onLoad }) {
                       style={{
                         color: marker.category == "送養" ? "#0d3b66" : "ff0000",
                         fontWeight: "bold",
-                        
                       }}
                     >
                       {marker.name}
@@ -245,12 +247,16 @@ function GoogleMapBlock({ closedPets, setClosedPets, onLoad }) {
   );
 }
 
-const CardBlock = ({ closedPets }) => {
+const CardBlock = ({ closedPets, setActiveMarker }) => {
+  const handleCardClick = (markerId) => {
+    setActiveMarker(markerId);
+  };
   return (
     <CardContainer>
       {closedPets.map((pet) => (
-        <Card key={pet.marker.id}>
-          <Image src={pet.marker.img} alt="Pet_img_inCard" />
+        <Card key={pet.marker.id} >
+        
+          <Image src={pet.marker.img} alt="Pet_img_inCard" onClick={() => handleCardClick(pet.marker.id)} />
           <InfoContainer>
             <InfoTitle>
               <img
@@ -285,6 +291,7 @@ const CardBlock = ({ closedPets }) => {
 const GPS = () => {
   const [closedPets, setClosedPets] = useState([]);
   const [isMapLoaded, setMapLoaded] = useState(false);
+  const [activeMarker, setActiveMarker] = useState(null);
   const handleMapLoad = (closedPetsData) => {
     setClosedPets(closedPetsData);
     setMapLoaded(true);
@@ -293,14 +300,16 @@ const GPS = () => {
     <PageDiv>
       {isMapLoaded ? (
         <>
-          <CardBlock closedPets={closedPets} />
+          <CardBlock closedPets={closedPets} setActiveMarker={setActiveMarker}/>
           <GoogleMapBlock
             setClosedPets={setClosedPets}
             onLoad={handleMapLoad}
+            setActiveMarker={setActiveMarker} 
+            activeMarker={activeMarker}
           />
         </>
       ) : (
-        <GoogleMapBlock setClosedPets={setClosedPets} onLoad={handleMapLoad} />
+        <GoogleMapBlock setClosedPets={setClosedPets} onLoad={handleMapLoad} setActiveMarker={setActiveMarker} activeMarker={activeMarker} />
       )}
     </PageDiv>
   );

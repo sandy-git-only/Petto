@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { District } from "../components/Members/region.js";
 import Swal from 'sweetalert2';
 import { useContext } from 'react';
-import { AuthContext } from '../utils/contexts';
+import { AuthContext } from '../utils/contexts.js';
 
 export function PetCreate() {
   const [breed, setBreed] = useState("");
@@ -99,8 +99,8 @@ export function PetCreate() {
       fileData.append("gender", gender);
       fileData.append("description", description);
       fileData.append("anthel", isFleaControlled ? "1" : "0");
-      fileData.append("ligation", isLigated);
-      fileData.append("vaccine", hasVaccinations);
+      fileData.append("ligation", isLigated ? "1" : "0");
+      fileData.append("vaccine", hasVaccinations ? "1" : "0");
       fileData.append("feature", feature);
       fileData.append("userID", user);
       fileData.append(`main_image`, fileList[0].originFileObj);
@@ -121,7 +121,8 @@ export function PetCreate() {
         const gpsResponse = await axios.get("http://localhost:3000/api/1.0/gps");
         if (gpsResponse){
           const geoJsonUpdate = await axios.get("http://localhost:3000/api/1.0/geojson")
-          if (petsResponse && gpsResponse && geoJsonUpdate) {
+          const matchResponse = await axios.post("http://localhost:3000/api/1.0/matches/publish");
+          if (petsResponse && gpsResponse && geoJsonUpdate && matchResponse) {
             await Swal.fire({
               icon: 'success',
               title: '成功送出表單！',

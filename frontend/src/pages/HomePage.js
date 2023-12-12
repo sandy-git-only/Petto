@@ -25,6 +25,7 @@ import {
 import { Link } from "react-router-dom";
 const femaleImg = "/images/girl.png";
 const maleImg = "/images/boy.png";
+const ImageDefault = "images/image-default.png";
 export const DogButton = ({ onClick, clicked }) => {
   return (
     <ButtonContainer onClick={onClick} clicked={clicked}>
@@ -237,7 +238,6 @@ export function Home() {
   
   const allGovPetsData = govPets ? govPets.pages.map((page) => page) : [];
   const allPetsData = pets ? pets.pages.map((page) => page.data) : [];
-  console.log(allPetsData);
   return (
     <>
       <Selection />
@@ -248,7 +248,7 @@ export function Home() {
             <Link to={`/pets/details/${pet.id}`}>
               <CardContainer>
                 <Card key={pet.id}>
-                  <PetMainImg src={pet.main_image} alt="pet image" />
+                  <PetMainImg src={pet.main_image || ImageDefault} alt="pet image" />
                 </Card>
                 <AllInfoContainer>
                   <InfoContainer>
@@ -288,7 +288,7 @@ export function Home() {
         <Link to={`/pets/details/${pet.animal_id}?from=shelter`}>
           <CardContainer>
             <Card key={pet.animal_id} >
-            <PetMainImg src={pet.album_file} alt="pet image" />
+            <PetMainImg src={pet.album_file || ImageDefault} alt="pet image" />
             </Card>
             <AllInfoContainer>
             <InfoContainer>

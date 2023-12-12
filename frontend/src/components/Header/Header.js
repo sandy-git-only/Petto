@@ -57,7 +57,7 @@ export function Header() {
       </MenuImgContainer>
       <Link to="/"><Logo src="/images/petto-logo.png" alt="logo" /></Link>
       {user ? (
-        <Link to="/members/menu">
+        <Link to="/members/adoption-list">
           <img src="/images/member.png" alt="member" style={{ maxWidth: '30px', height: 'auto' }}/>
         </Link>
       ) : (

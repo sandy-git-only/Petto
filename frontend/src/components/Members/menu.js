@@ -15,6 +15,10 @@ export const Text = styled.text`
   font-size: 12px;
   white-space: nowrap;
   position: relative;
+  align-items: center;
+  justify-content: center;
+  margin: auto 0px;
+  cursor: pointer;
 
   &:before {
     content: '';
@@ -34,7 +38,6 @@ export const Text = styled.text`
 export const PageDiv = styled.div`
   width: 100%;
   display: flex;
-  /* margin: 0 auto; */
   min-height: 100vh;
   justify-content: center;
   align-items: center;
@@ -47,6 +50,7 @@ export const TitleImg = styled.img`
 
 export const LinkContainer  = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
   width: fit-content;
   gap:5px;

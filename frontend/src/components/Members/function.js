@@ -9,6 +9,7 @@ export const RightGroup = styled.div`
   margin: auto 0px;
   border-radius:20px;
   background-color: #FFFFFF;
+  padding:10px;
 `;
 
 // AdoptionList, LostAndFound, ReportRescue, MatchList, FollowPets
