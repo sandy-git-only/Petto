@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const LeftGroup = styled.div`
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   gap: 10px;
   justify-content: center;
   padding: 0 10px;
@@ -38,6 +38,7 @@ export const Text = styled.text`
 export const PageDiv = styled.div`
   width: 100%;
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   justify-content: center;
   align-items: center;
