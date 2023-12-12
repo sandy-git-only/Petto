@@ -129,13 +129,15 @@ const MatchApplication = () => {
         userID: user,
         category: category,
         animalClass: petType,
-        type: breed === "" ? "" : breed,
-        color: color === "" ? "" : color,
-        city:  city === "[null]" ? "" : city,
-        district: district === "[null]" ? "" : district,
-        gender: gender === "" ? "" : gender,
+        type: breed == "" || null || undefined ? "" : breed,
+        color: color == "" ? "" : color,
+        city:  city == "" || null || undefined  ? "" : city,
+        district: district == "" || null || undefined  ? "" : district,
+        gender: gender == undefined ? "" : gender,
         email: email,
       };
+
+      console.log("shelterData",shelterData);
     const handleSubmit = async () =>{
         try {
             const url = "http://localhost:3000/api/1.0/matches/subscribe";
