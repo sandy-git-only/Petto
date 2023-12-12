@@ -125,12 +125,25 @@ const MatchApplication = () => {
         gender: gender === "" ? null : gender,
         email: email,
       };
+      const shelterData = {
+        userID: user,
+        category: category,
+        animalClass: petType,
+        type: breed === "" ? "" : breed,
+        color: color === "" ? "" : color,
+        city:  city === "[null]" ? "" : city,
+        district: district === "[null]" ? "" : district,
+        gender: gender === "" ? "" : gender,
+        email: email,
+      };
     const handleSubmit = async () =>{
         try {
             const url = "http://localhost:3000/api/1.0/matches/subscribe";
             const response = await axios.post(url, data);
-            const shelterResponse = await axios.get(`https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL&$filter=animal_kind=${petType}&animal_colour=${color}&animal_Variety=${breed}&animal_sex=${gender}&shelter_address=${city}${district}`)
-            console.log(shelterResponse);
+            const shelterUrl =`https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL&$filter=animal_kind=${shelterData.animalClass}&animal_colour=${shelterData.color}&animal_Variety=${shelterData.type}&animal_sex=${shelterData.gender}&shelter_address=${shelterData.city}${shelterData.district}`
+            const shelterResponse = await axios.get(shelterUrl)
+            console.log("shelterUrl",shelterUrl)
+            console.log("shelterResponse",shelterResponse.data);
               // const matchResponse = await axios.get(`http://localhost:3000/api/1.0/matches/match-user?userID=${user}`);
               // if (response && matchResponse){
               //   await Swal.fire({
