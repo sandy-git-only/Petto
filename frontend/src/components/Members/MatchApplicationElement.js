@@ -129,7 +129,7 @@ const MatchApplication = () => {
         try {
             const url = "http://localhost:3000/api/1.0/matches/subscribe";
             const response = await axios.post(url, data);
-            // const shelterResponse = await axios.get("https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL&$filter=animal_kind=&animal_colour=黑色")
+            const shelterResponse = await axios.get(`https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL&$filter=animal_kind=${petType}&animal_colour=${color}&animal_Variety=${breed}&animal_sex=${gender}&shelter_address=${city}${district}`)
               const matchResponse = await axios.get(`http://localhost:3000/api/1.0/matches/match-user?userID=${user}`);
               if (response && matchResponse){
                 await Swal.fire({
