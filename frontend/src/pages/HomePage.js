@@ -188,7 +188,7 @@ export function Home() {
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = window.innerHeight + window.scrollY;
-    const threshold = 50; 
+    const threshold = 150; 
 
     if (scrollTop >= scrollHeight - threshold ) {
       if(hasNextPage && !isLoading){
