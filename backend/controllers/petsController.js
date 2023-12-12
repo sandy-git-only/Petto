@@ -3,7 +3,8 @@ import {
   insertImageTable,
   getPetsDetailById,
   getPetsByCondition,
-  getPetsByConditionCount
+  getPetsByConditionCount,
+  getPetsDetailByUserId
 } from "../models/petsModel.js";
 import redisCache from "../middlewares/redis.js";
 import {insertGeoLocationDB}  from "../models/gpsModel.js";
@@ -135,6 +136,30 @@ function formatRes(pet, images) {
   return petsFormat;
 };
 
+
+function UserformatRes(pet) {
+  const petsFormat = {
+    id: pet.id,
+    category: pet.category,
+    animalClass: pet.animalClass,
+    name: pet.name,
+    type: pet.type,
+    address: pet.address,
+    gender: pet.gender,
+    age: pet.age,
+    anthel: pet.anthel,
+    vaccine: pet.vaccine,
+    ligation: pet.ligation,
+    description: pet.description,
+    color: pet.color,
+    feature: pet.feature,
+    userID: pet.userID,
+    main_image: pet.main_image,
+    city: pet.city,
+    district:pet.district,
+  };
+  return petsFormat;
+};
 export async function reqPetsDetailById(req, res) {
   const id = req.query.id;
   const cacheKey = `pet:${id}`;
@@ -207,5 +232,33 @@ export async function reqPetsByCondition(req, res, conditionValue) {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "product paging error" });
+  }
+};
+
+
+export async function reqPetsDetailByUserId(req, res) {
+  const userID = req.query.userID;
+  const cacheKey = `pet:${userID}`;
+  try {
+    let results = await redisCache(
+      async () => getPetsDetailByUserId(userID),
+      cacheKey,
+      req,
+      res
+    );
+    const petsResults = results.pets
+    // console.log("results....",results.pets);
+    const petsDetails = await petsResults.map((result)=> {
+      // console.log("result",result);
+      const petsDetail = UserformatRes(result);
+      return petsDetail
+    },
+    )
+    console.log(petsDetails)
+    // const petsDetails = UserformatRes(results);
+    res.json({ data: petsDetails });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error Response");
   }
 };

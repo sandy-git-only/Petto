@@ -51,7 +51,7 @@ export async function getPetsDetailById(id) {
       return null;
     }
   } catch (error) {
-    console.error("Error retrieving product details:", error);
+    console.error("Error retrieving pets details:", error);
     return null;
   }
 };
@@ -113,3 +113,29 @@ export async function getPetsByConditionCount(conditionValue) {
     throw error; // Rethrow the error to be handled by the caller
   }
 }
+
+
+export async function getPetsDetailByUserId(userID) {
+  try {
+    console.log("userID",userID)
+    // await sequelize.sync();
+    const pets = await Pets.findAll({
+      where: { userID },
+    });
+    // console.log(pets);
+
+    return {pets};
+    // if (pets) {
+    //   const images = await Images.findAll({
+    //     where: { petID: pets.id },
+    //   });
+    //   return { pets, images };
+    // } else {
+    //   console.log("Pets not found in petsModel:getPetsDetailByUserId");
+    //   return null;
+    // }
+  } catch (error) {
+    console.error("Error retrieving pets details:", error);
+    return null;
+  }
+};

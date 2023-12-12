@@ -130,17 +130,18 @@ const MatchApplication = () => {
             const url = "http://localhost:3000/api/1.0/matches/subscribe";
             const response = await axios.post(url, data);
             const shelterResponse = await axios.get(`https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL&$filter=animal_kind=${petType}&animal_colour=${color}&animal_Variety=${breed}&animal_sex=${gender}&shelter_address=${city}${district}`)
-              const matchResponse = await axios.get(`http://localhost:3000/api/1.0/matches/match-user?userID=${user}`);
-              if (response && matchResponse){
-                await Swal.fire({
-                  icon: 'success',
-                  title: '申請成功！',
-                  text: '等待緣分降臨中...',
-                  showConfirmButton: false,
-                  timer: 1500, 
-                });
-              await navigate("/members/match-list")
-            }
+            console.log(shelterResponse);
+              // const matchResponse = await axios.get(`http://localhost:3000/api/1.0/matches/match-user?userID=${user}`);
+              // if (response && matchResponse){
+              //   await Swal.fire({
+              //     icon: 'success',
+              //     title: '申請成功！',
+              //     text: '等待緣分降臨中...',
+              //     showConfirmButton: false,
+              //     timer: 1500, 
+              //   });
+              // await navigate("/members/match-list")
+            // }
             console.log(response.data);
           } catch (error) {
             console.error('Error submitting form:', error);

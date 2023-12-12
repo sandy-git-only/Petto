@@ -450,6 +450,60 @@
         "city": "屏東縣",
         "district": "霧臺鄉"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.4618415,
+          25.0114095
+        ]
+      },
+      "properties": {
+        "id": 59,
+        "category": "送養",
+        "name": "PEPE",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/download%20%285%29.jpg",
+        "city": "新北市",
+        "district": "板橋區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.4618415,
+          25.0114095
+        ]
+      },
+      "properties": {
+        "id": 60,
+        "category": "送養",
+        "name": "PEPE",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/download%20%285%29.jpg",
+        "city": "新北市",
+        "district": "板橋區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.4618415,
+          25.0114095
+        ]
+      },
+      "properties": {
+        "id": 61,
+        "category": "送養",
+        "name": "PEPE",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/download%20%285%29.jpg",
+        "city": "新北市",
+        "district": "板橋區"
+      }
     }
   ]
 }

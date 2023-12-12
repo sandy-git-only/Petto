@@ -5,7 +5,7 @@ const router = express.Router();
 const upload = multer();
 import querystring  from "querystring";
 import axios from 'axios';
-import { createPetsInfo, reqPetsDetailById, reqPetsByCondition }  from "../controllers/petsController.js";
+import { createPetsInfo, reqPetsDetailById, reqPetsByCondition,reqPetsDetailByUserId }  from "../controllers/petsController.js";
 
 router.post("/create",
   upload.fields([
@@ -67,5 +67,6 @@ router.get('/conditions/:conditions', (req, res) => {
 // router.get('/accessories' , (req, res) => { getCategoryProduct(req, res, "accessories")});
 // router.get('/search',(req, res) => { searchProduct (req, res) });
 router.get('/details', (req, res) =>  reqPetsDetailById(req, res));
+router.get('/user-post', (req, res) =>  reqPetsDetailByUserId(req, res));
 
 export { router };

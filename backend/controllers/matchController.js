@@ -3,7 +3,7 @@ import {
   findUserEmail,
   insertMatchesTable,
 } from "../models/matchModel.js";
-import { findMatchingPets } from "../models/matchModel.js";
+import { findMatchingPets,postUserMatchingPets } from "../models/matchModel.js";
 import { Pets } from "../utils/petsTable.js";
 
 export async function createNotifications(req, res) {
@@ -55,6 +55,24 @@ export async function publishMatched(req, res) {
       })
     );
     return userPetsNumMap;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function userPetsMatchedinsertDB(userID) {
+  try {
+    const matchedResult = await postUserMatchingPets(userID);
+    await Promise.all(
+      matchedResult.matchedPairs.map(async (pet) => {
+          const matchesData = {
+            userID: matchedResult.userID,
+            petID:  pet.petID
+          };
+          insertMatchesTable(matchesData)
+      })
+    );
+    return matchedResult;
   } catch (e) {
     console.error(e);
   }
