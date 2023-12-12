@@ -129,13 +129,14 @@ const MatchApplication = () => {
         userID: user,
         category: category,
         animalClass: petType,
-        type: breed == "" || null || undefined ? "" : breed,
-        color: color == "" ? "" : color,
-        city:  city == "" || null || undefined  ? "" : city,
-        district: district == "" || null || undefined  ? "" : district,
-        gender: gender == undefined ? "" : gender,
+        type: breed !== "" && breed !== null && breed !== undefined ? breed : "",
+        color: color !== "" ? color : "",
+        city: city !== "" && city !== null && city !== undefined ? city : "",
+        district: district !== "" && district !== null && district !== undefined ? district : "",
+        gender: gender !== undefined ? gender : "",
         email: email,
       };
+      
 
       console.log("shelterData",shelterData);
     const handleSubmit = async () =>{
