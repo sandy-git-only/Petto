@@ -1,6 +1,6 @@
 FROM node:16-alpine
 WORKDIR /app
-COPY package.json ./
+COPY package.json package-lock.json ./
 RUN npm ci
 RUN npm install -g react-scripts
 RUN npm install
