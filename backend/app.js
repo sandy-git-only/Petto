@@ -11,17 +11,17 @@ import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors';
 dotenv.config();
-
-// import jwt from 'jsonwebtoken';
-// import cors from 'cors'
-app.use(express.json());
-
 // Enable CORS
 app.use(cors());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 
 
-
+app.use(express.json());
 const API_VERSION = "1.0"
 app.use(`/api/${API_VERSION}/pets`, petsRouter )  ;
 app.use(`/api/${API_VERSION}/users`, usersRouter ) ;
