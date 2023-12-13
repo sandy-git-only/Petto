@@ -1,6 +1,6 @@
 import sequelize from "../middlewares/db.js";
 import { DataTypes, Op } from "sequelize";
-
+import { Users } from "./usersTable.js"
 export const Pets = sequelize.define(
   "Pets",
   {
@@ -63,6 +63,7 @@ export const Pets = sequelize.define(
         model: "Users",
         key: "id",
       },
+      field: "userID", 
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -84,3 +85,6 @@ export const Pets = sequelize.define(
     },
   }
 );
+
+Pets.belongsTo(Users, { foreignKey: 'userID' }); 
+Users.hasMany(Pets, { foreignKey: 'userID' });

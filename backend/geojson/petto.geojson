@@ -504,6 +504,276 @@
         "city": "新北市",
         "district": "板橋區"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.7822278,
+          25.1284336
+        ]
+      },
+      "properties": {
+        "id": 62,
+        "category": "送養",
+        "name": "tita",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/cat.png",
+        "city": "基隆市",
+        "district": "信義區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.7822278,
+          25.1284336
+        ]
+      },
+      "properties": {
+        "id": 63,
+        "category": "送養",
+        "name": "tita",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/cat.png",
+        "city": "基隆市",
+        "district": "信義區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5198716,
+          25.0421407
+        ]
+      },
+      "properties": {
+        "id": 64,
+        "category": "送養",
+        "name": "yes",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/dog-bowl.png",
+        "city": "臺北市",
+        "district": "中正區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5198716,
+          25.0421407
+        ]
+      },
+      "properties": {
+        "id": 65,
+        "category": "送養",
+        "name": "yes",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/dog-bowl.png",
+        "city": "臺北市",
+        "district": "中正區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5198716,
+          25.0421407
+        ]
+      },
+      "properties": {
+        "id": 66,
+        "category": "送養",
+        "name": "yes",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/dog-bowl.png",
+        "city": "臺北市",
+        "district": "中正區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.7391833,
+          25.1276033
+        ]
+      },
+      "properties": {
+        "id": 67,
+        "category": "送養",
+        "name": "ff",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/shelter.png",
+        "city": "基隆市",
+        "district": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.7391833,
+          25.1276033
+        ]
+      },
+      "properties": {
+        "id": 68,
+        "category": "送養",
+        "name": "ff",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/shelter.png",
+        "city": "基隆市",
+        "district": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.7391833,
+          25.1276033
+        ]
+      },
+      "properties": {
+        "id": 69,
+        "category": "送養",
+        "name": "ff",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/shelter.png",
+        "city": "基隆市",
+        "district": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5427093,
+          25.0792018
+        ]
+      },
+      "properties": {
+        "id": 70,
+        "category": "送養",
+        "name": "jeworj",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/alert.png",
+        "city": "臺北市",
+        "district": "中山區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5427093,
+          25.0792018
+        ]
+      },
+      "properties": {
+        "id": 71,
+        "category": "送養",
+        "name": "我",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/adoption.png",
+        "city": "臺北市",
+        "district": "中山區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5198716,
+          25.0421407
+        ]
+      },
+      "properties": {
+        "id": 72,
+        "category": "送養",
+        "name": "34243",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/adoption.png",
+        "city": "臺北市",
+        "district": "中正區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.7451927,
+          25.1187161
+        ]
+      },
+      "properties": {
+        "id": 73,
+        "category": "送養",
+        "name": "99",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/dog-bowl.png",
+        "city": "基隆市",
+        "district": "仁愛區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.7391833,
+          25.1276033
+        ]
+      },
+      "properties": {
+        "id": 74,
+        "category": "送養",
+        "name": "===",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/adoption.png",
+        "city": "基隆市",
+        "district": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.7451927,
+          25.1187161
+        ]
+      },
+      "properties": {
+        "id": 75,
+        "category": "送養",
+        "name": "124",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/adoption-header.png",
+        "city": "基隆市",
+        "district": "仁愛區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5113064,
+          25.0627243
+        ]
+      },
+      "properties": {
+        "id": 76,
+        "category": "送養",
+        "name": "mimi",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/download%20%286%29.jpg",
+        "city": "臺北市",
+        "district": "大同區"
+      }
     }
   ]
 }

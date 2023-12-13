@@ -14,9 +14,10 @@ import { Input, InputNumber, Checkbox } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { District } from "../components/Members/region.js";
-import Swal from 'sweetalert2';
-import { useContext } from 'react';
-import { AuthContext } from '../utils/contexts.js';
+import Swal from "sweetalert2";
+import { useContext } from "react";
+import { AuthContext } from "../utils/contexts.js";
+import LoadingOverlay from "../components/Global/progress.js";
 
 export function PetCreate() {
   const [breed, setBreed] = useState("");
@@ -35,12 +36,11 @@ export function PetCreate() {
   const [fileList, setFileList] = useState([]);
   const [otherColor, setOtherColor] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [loading, setLoading] = useState(false);
   const category = "送養";
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-
-  
-
+  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const handlePetTypeChange = (e) => {
     setPetType(e.target.value);
@@ -77,12 +77,10 @@ export function PetCreate() {
   const handleDistrictChange = (value) => {
     setSelectedDistrict(value);
   };
-
   const handleSubmit = async ({ e, fileList }) => {
     e.preventDefault();
-    console.log("main_image", fileList[0].originFileObj);
-    // console.log("main_image",  fileList[1].originFileObj);
     try {
+      setLoading(true);
       const fileData = new FormData();
       const city = selectedDistrict[0];
       const district = selectedDistrict[1];
@@ -107,9 +105,11 @@ export function PetCreate() {
       const images = fileList.slice(1);
       images.forEach((image) => {
         fileData.append(`images`, image.originFileObj);
+        console.log(image);
       });
+
       const petsResponse = await axios.post(
-        "http://localhost:3000/api/1.0/pets/create",
+        `${REACT_APP_BASE_URL}/pets/create`,
         fileData,
         {
           headers: {
@@ -117,26 +117,23 @@ export function PetCreate() {
           },
         }
       );
-      if (petsResponse){
-        const gpsResponse = await axios.get("http://localhost:3000/api/1.0/gps");
-        if (gpsResponse){
-          const geoJsonUpdate = await axios.get("http://localhost:3000/api/1.0/geojson")
-          const matchResponse = await axios.post("http://localhost:3000/api/1.0/matches/publish");
-          if (petsResponse && gpsResponse && geoJsonUpdate && matchResponse) {
-            await Swal.fire({
-              icon: 'success',
-              title: '成功送出表單！',
-              text:'謝謝你的愛心，靜待緣分喔',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            navigate("/");
-          }
-        }
-      }
+      
+      await axios.get(`${REACT_APP_BASE_URL}/gps`);
+      await axios.get(`${REACT_APP_BASE_URL}/geojson`);
+      await axios.post(`${REACT_APP_BASE_URL}/matches/publish`);
+      setLoading(false);
       
     } catch (error) {
       console.error("Error uploading file:", error);
+    } finally {
+      await Swal.fire({
+        icon: "success",
+        title: "成功送出表單！",
+        text: "謝謝你的愛心，緣分降臨中...",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      navigate("/");
     }
   };
 
@@ -170,6 +167,7 @@ export function PetCreate() {
 
   return (
     <PageDiv>
+     {loading && <LoadingOverlay />}
       <FormContainer>
         <form onSubmit={(e) => handleSubmit({ e, fileList })}>
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -278,7 +276,7 @@ export function PetCreate() {
             />
             <Label>是否結紮</Label>
           </CheckboxGroup>
-          <CheckboxGroup>            
+          <CheckboxGroup>
             <Checkbox
               type="checkbox"
               checked={isFleaControlled}
@@ -300,7 +298,7 @@ export function PetCreate() {
             <TextArea value={description} onChange={handleDescriptionChange} />
             <ImageCrop fileList={fileList} setFileList={setFileList} />
           </FormGroup>
-          <SubmitButton type="submit">提交</SubmitButton>
+          <SubmitButton type="submit" disabled={loading}>Submit</SubmitButton>
         </form>
       </FormContainer>
     </PageDiv>

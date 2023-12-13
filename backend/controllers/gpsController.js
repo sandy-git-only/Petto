@@ -50,7 +50,7 @@ export default async function reqPetsLocations(req, res) {
         const geoLocations = await reqGeoLocation();
         const geoJSON = convertToGeoJSON(geoLocations);
         writeGeoJSONToFile(geoJSON);
-      // res.status(200).send({geoJSON: geoJSON});
+      res.status(200).send({geoJSON: geoJSON});
 
       } catch (error) {
         console.error("Error processing GeoLocations:", error);

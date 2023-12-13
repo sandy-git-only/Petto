@@ -95,7 +95,7 @@ export function Members() {
           <Route path="adoption-list" element={<AdoptionListElement />} />
           {/* <Route path="/lost-and-found" element={<LostAndFound />} /> */}
           {/* <Route path="/report-rescue" element={<ReportRescue />} /> */}
-          <Route path="/match-list" element={<MatchListElement />} />
+          <Route path="match-list" element={<MatchListElement />} />
           <Route path="match-application" element={<MatchApplication />} />
           {/* <Route path="/follow-pets" element={<FollowPets />} /> */}
         </Routes>

@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useContext } from 'react';
 import { AuthContext } from '../../utils/contexts.js';
+import LoadingOverlay from "../Global/progress.js";
+
 const FormGroup = styled.div`
   margin-bottom: 16px;
 `;
@@ -86,6 +88,8 @@ const MatchApplication = () => {
     const [color, setColor] = useState("");
     const [email, setEmail] = useState("");
     const [selectedDistrict, setSelectedDistrict] = useState("");
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate()
     const { user } = useContext(AuthContext);
     const handleDistrictChange = (value) => {
@@ -140,6 +144,7 @@ const MatchApplication = () => {
 
       console.log("shelterData",shelterData);
     const handleSubmit = async () =>{
+      setLoading(true);
         try {
             const url = "http://localhost:3000/api/1.0/matches/subscribe";
             const response = await axios.post(url, data);
@@ -147,20 +152,21 @@ const MatchApplication = () => {
             const shelterResponse = await axios.get(shelterUrl)
             console.log("shelterUrl",shelterUrl)
             console.log("shelterResponse",shelterResponse.data);
-              // const matchResponse = await axios.get(`http://localhost:3000/api/1.0/matches/match-user?userID=${user}`);
-              // if (response && matchResponse){
-              //   await Swal.fire({
-              //     icon: 'success',
-              //     title: '申請成功！',
-              //     text: '等待緣分降臨中...',
-              //     showConfirmButton: false,
-              //     timer: 1500, 
-              //   });
-              // await navigate("/members/match-list")
-            // }
-            console.log(response.data);
+              const matchResponse = await axios.get(`http://localhost:3000/api/1.0/matches/match-user?userID=${user}`);
+              setLoading(false);
+              if (response && matchResponse){
+                await Swal.fire({
+                  icon: 'success',
+                  title: '申請成功！',
+                  text: '等待緣分降臨中...',
+                  showConfirmButton: false,
+                  timer: 1500, 
+                });
+            }
           } catch (error) {
             console.error('Error submitting form:', error);
+          } finally {
+            navigate("/members/match-list")
           }
     }
     
@@ -196,7 +202,7 @@ const MatchApplication = () => {
       : [];
   return (
     <div style={{padding:"20px"}}>
-  
+    {loading && <LoadingOverlay />}
       <Form
         labelCol={{
           span: 4,
@@ -278,7 +284,7 @@ const MatchApplication = () => {
           <Input type="text" value={email} onChange={handleEmailChange}/>
         </Form.Item>
         <Form.Item >
-          <Button type="primary" htmlType="submit">送出 Submit</Button>
+          <Button type="primary" htmlType="submit" disabled={loading}>送出 Submit</Button>
         </Form.Item>
       </Form>
     </div>

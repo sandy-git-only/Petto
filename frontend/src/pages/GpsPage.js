@@ -16,9 +16,9 @@ import { Link } from "react-router-dom";
 const PageDiv = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   align-items: center;
-  height: 100vh;
+  /* height: 100vh; */
   /* padding: 10px; */
 `;
 const containerStyle = {

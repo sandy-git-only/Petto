@@ -111,6 +111,7 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
 };
 
 function formatRes(pet, images) {
+  
   const image = images.map((image) => image.url);
   const petsFormat = {
     id: pet.id,
@@ -128,6 +129,7 @@ function formatRes(pet, images) {
     color: pet.color,
     feature: pet.feature,
     userID: pet.userID,
+    email:pet.User.email,
     main_image: pet.main_image,
     city: pet.city,
     district:pet.district,
@@ -171,6 +173,7 @@ export async function reqPetsDetailById(req, res) {
       res
     );
     const { pets, images } = results;
+    console.log("users",pets.User.email);
     const petsDetails = formatRes(pets, images);
     res.json({ data: petsDetails });
   } catch (error) {

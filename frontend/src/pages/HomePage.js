@@ -187,7 +187,7 @@ export function Home() {
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = window.innerHeight + window.scrollY;
+    const scrollTop = window.innerHeight;
     const threshold = 150; 
 
     if (scrollTop >= scrollHeight - threshold ) {
@@ -282,7 +282,7 @@ export function Home() {
           <CircularIndeterminate />
           </div>
         ) : <></>}
-        {/* {allGovPetsData.map((govData)=>
+        {allGovPetsData.map((govData)=>
           govData.map((pet) => (
         <PetContainer>
         <Link to={`/pets/details/${pet.animal_id}?from=shelter`}>
@@ -304,7 +304,7 @@ export function Home() {
           </CardContainer>
           </Link>
         </PetContainer>
-      )))} */}
+      )))}
       {hasGovDataNextPage ? (
         <div>
           <CircularIndeterminate />

@@ -1,6 +1,6 @@
 import sequelize from '../middlewares/db.js';
 import { DataTypes, Op } from 'sequelize';
-
+import { Pets } from './petsTable.js'
 
 export const Users = sequelize.define('Users', {
     id: {
@@ -36,3 +36,5 @@ export const Users = sequelize.define('Users', {
   },
   { timestamps: false }
   );
+
+

@@ -1,4 +1,4 @@
-import LinearProgress from "../components/Global/linearProgress.js";
+import LoadingOverlay from "../components/Global/progress.js";
 import { useQuery } from "react-query";
 import { useState } from "react";
 import axios from "axios";
@@ -10,7 +10,6 @@ import {
 } from "../components/PetsDetails/containers.js";
 import {
   SubTitleBlock,
-  SubTitle,
   SubTitleInfo,
   CardContainer,
   Card,
@@ -21,23 +20,19 @@ import {
 import {
   TitleBlock,
   Name,
-  Breed,
 } from "../components/PetsDetails/titleInfo.js";
-import {
-  AdoptBlock,
-  AdoptButton,
-  ContactPerson,
-  MapFrame,
-} from "../components/PetsDetails/adopt.js";
+import { MapFrame,} from "../components/PetsDetails/adopt.js";
 import {
   FormContainer,
   FormGroup,
   Label,
   SelectGroup,
 } from "../components/PetsDetails/form.js";
-import { Image, Input, Select, Checkbox } from "antd";
+import Swal from "sweetalert2";
+import { Image, Input, Checkbox } from "antd";
 import { useParams, useLocation } from "react-router-dom";
 import { Radio } from "antd";
+import { Modal, Button } from "antd";
 const femaleImg = "/images/girl.png";
 const maleImg = "/images/boy.png";
 const vaccineImg = "/images/vaccine.png";
@@ -45,7 +40,116 @@ const featureImg = "/images/pet-care.png";
 const descriptionImg = "/images/description.png";
 const userImg = "/images/user.png";
 const shelterImg = "/images/shelter.png";
-const ImageDefault = "images/image-default.png";
+const ImageDefault = "/images/image-default.png";
+
+
+const Form = ({
+  handleNameChange,
+  handleEmailChange,
+  handleContactChange,
+  handleQuestionChange,
+  handleTimeChange,
+  handleGenderChange,
+  gender,
+  name,
+  email,
+  contact,
+  question,
+  time,
+}) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  // };
+  
+
+  return (
+    // <FormContainer onSubmit={handleSubmit}>
+    <FormContainer>
+      <FormGroup>
+        <Label htmlFor="name">姓名 Name</Label>
+        <Input
+          type="text"
+          id="name"
+          name="name"
+          required
+          style={{ width: "100%" }}
+          onChange={handleNameChange}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="email">* 聯絡方式: 電子郵件 Email</Label>
+        <Input
+          type="email"
+          id="email"
+          name="email"
+          required
+          style={{ width: "100%" }}
+          onChange={handleEmailChange}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="phone">聯絡方式: LineID / 手機</Label>
+        <Input
+          id="phone"
+          name="phone"
+          style={{ width: "100%" }}
+          onChange={handleContactChange}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="question">有什麼想先詢問的嗎? </Label>
+        <Input
+          id="question"
+          name="question"
+          style={{ width: "100%", height: "60px" }}
+          onChange={handleQuestionChange}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="time">希望聯絡的時間(早上/下午/晚上/皆可)</Label>
+        <Input
+          id="time"
+          name="time"
+          style={{ width: "100%" }}
+          onChange={handleTimeChange}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label>性別：</Label>
+      </FormGroup>
+      <FormGroup style={{ display: "flex" }}>
+        <Radio.Group onChange={handleGenderChange} value={gender}>
+          <Radio value="boy" style={{ fontSize: "10px" }}>
+            男生
+          </Radio>
+          <Radio value="girl" style={{ fontSize: "10px" }}>
+            女生
+          </Radio>
+          <Radio value="notProvide" style={{ fontSize: "10px" }}>
+            不願透露
+          </Radio>
+        </Radio.Group>
+      </FormGroup>
+
+      <FormGroup>
+        <Label style={{ color: "brown" }}>* 我願意承諾 *</Label>
+
+        <SelectGroup>
+          {/* <Input type="checkbox" id="reading" name="interest" value="reading" /> */}
+          <Checkbox style={{ fontSize: "0.5rem" }}>
+            認養不棄養，不離不棄
+          </Checkbox>
+        </SelectGroup>
+      </FormGroup>
+      {/* <AdoptBlock>
+        <AdoptButton type="submit">Adopt!</AdoptButton>
+      </AdoptBlock> */}
+    </FormContainer>
+  );
+};
+
+
+
 
 export function PetDetail() {
   const { id } = useParams();
@@ -54,8 +158,70 @@ export function PetDetail() {
   const fromGovData = queryParams.get("from") === "shelter";
   const [govData, setGovData] = useState([]);
   const [isLoadingGovData, setIsLoadingGovData] = useState(true);
-  const [gender, setGender] = useState(1);
   const [petData, setPetData] = useState({});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [gender, setGender] = useState(1);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [contact, setContact] = useState("");
+  const [question, setQuestion] = useState("");
+  const [time, setTime] = useState("");
+
+    const handleGenderChange = (e) => {
+      setGender(e.target.value);
+    };
+    const handleNameChange = (e) => {
+      setName(e.target.value);
+    };
+    const handleEmailChange = (e) => {
+      setEmail(e.target.value);
+    };
+    const handleContactChange = (e) => {
+      setContact(e.target.value);
+    };
+    const handleQuestionChange = (e) => {
+      setQuestion(e.target.value);
+    };
+    const handleTimeChange = (e) => {
+      setTime(e.target.value);
+    };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  const data = {
+    name: name,
+    email: email,
+    question: question,
+    contact: contact,
+    time: time,
+    gender: gender,
+    recipient: petData.email
+  };
+  const handleOk = () => {
+    axios.post(`${process.env.REACT_APP_BASE_URL}/matches/send-adoption`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("Send to the poster successfully", response.data);
+        Swal.fire({
+          icon: "success",
+          title: "成功送出！",
+          timer: 1500,
+        });
+        setIsModalVisible(false);
+      })
+      .catch((error) => {
+        console.error("Fail to send to the poster", error);
+      });
+  };
+
   const govPetsAPI =
     "https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL";
 
@@ -90,95 +256,24 @@ export function PetDetail() {
       throw error;
     }
   });
-
-
- console.log(petData.main_image);
-  const handleGenderChange = (e) => {
-    setGender(e.target.value);
-  };
+ 
+  
 
   if (isLoading) {
-    return <LinearProgress />;
+    return <LoadingOverlay />;
   }
 
   if (isError) {
     return <p>Error fetching product data</p>;
   }
-  const Form = () => {
-    const handleSubmit = (e) => {
-      e.preventDefault();
-    };
-
-    return (
-      <FormContainer onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label htmlFor="name">姓名 Name</Label>
-          <Input
-            type="text"
-            id="name"
-            name="name"
-            required
-            style={{ width: "100%" }}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label htmlFor="email">電子郵件 Email / LineID</Label>
-          <Input
-            type="email"
-            id="email"
-            name="email"
-            required
-            style={{ width: "100%" }}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label htmlFor="city">居住地 Address</Label>
-          <Select id="city" name="city" style={{ width: "50%" }}>
-            <option value="taipei">台北</option>
-            <option value="tainan">台南</option>
-            <option value="taichung">台中</option>
-          </Select>
-        </FormGroup>
-
-        <FormGroup>
-          <Label>性別：</Label>
-        </FormGroup>
-        <FormGroup style={{ display: "flex" }}>
-          <Radio.Group onChange={handleGenderChange} value={gender}>
-            <Radio value="boy" style={{ fontSize: "10px" }}>
-              男生
-            </Radio>
-            <Radio value="girl" style={{ fontSize: "10px" }}>
-              女生
-            </Radio>
-            <Radio value="notProvide" style={{ fontSize: "10px" }}>
-              不願透露
-            </Radio>
-          </Radio.Group>
-        </FormGroup>
-
-        <FormGroup>
-          <Label style={{ color: "brown" }}>* 我願意承諾 *</Label>
-
-          <SelectGroup>
-            {/* <Input type="checkbox" id="reading" name="interest" value="reading" /> */}
-            <Checkbox style={{ fontSize: "50%" }}>
-              認養不棄養，不離不棄
-            </Checkbox>
-          </SelectGroup>
-        </FormGroup>
-        <AdoptBlock>
-          <AdoptButton type="submit">Adopt!</AdoptButton>
-        </AdoptBlock>
-      </FormContainer>
-    );
-  };
+  
   const REACT_APP_MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
-  return !fromGovData ? (
+  return !fromGovData && petData.type.length ? (
     <PageDiv>
-      <Image style={{ borderRadius: "10px" }} src={petData.main_image || ImageDefault} />
+      <Image
+        style={{ borderRadius: "10px" }}
+        src={petData.main_image || ImageDefault}
+      />
       <TitleBlock>
         <SubTitleBlock>
           <Name>{petData.name}</Name>
@@ -188,7 +283,7 @@ export function PetDetail() {
       <TitleBlock>
         <CardContainer>
           <Card style={{ backgroundColor: "#dad7cd" }}>
-            <SubTitleInfo>{petData.age} y/o</SubTitleInfo>
+            <SubTitleInfo>{petData.age} Y</SubTitleInfo>
             <SubInfo>Age</SubInfo>
           </Card>
           <Card style={{ backgroundColor: "#fefae0" }}>
@@ -198,7 +293,7 @@ export function PetDetail() {
               {petData.type}
             </SubTitleInfo>
             <SubInfo
-              style={{ marginTop: petData.type.length >= 3 ? "3px" : "60%" }}
+              style={{ marginTop: petData.type.length >= 3 ? "3px" : "" }}
             >
               品種
             </SubInfo>
@@ -246,7 +341,7 @@ export function PetDetail() {
             alt="vaccine"
             style={{ width: "20px", height: "20px" }}
           />
-          <Text>疫苗   {petData.vaccine === "1" ? "Yes" : "No"}</Text>
+          <Text>疫苗 {petData.vaccine === "1" ? "Yes" : "No"}</Text>
         </TextContainer>
         <TextContainer>
           <img
@@ -254,7 +349,9 @@ export function PetDetail() {
             alt="feature"
             style={{ width: "20px", height: "20px" }}
           />
-          <Text>個性   {petData.feature === null ? "等你發掘" : petData.feature}</Text>
+          <Text>
+            個性 {petData.feature === null ? "等你發掘" : petData.feature}
+          </Text>
         </TextContainer>
         <Divider />
         <img
@@ -279,19 +376,54 @@ export function PetDetail() {
         title="Google Maps"
       />
       <Divider />
-      <Form />
+      <text style={{ color: "#8d0801", fontSize: "0.8rem" }}>
+        填寫表單，聯絡送養人
+      </text>
+      <Button
+        style={{ backgroundColor: "#f26419" }}
+        type="primary"
+        onClick={showModal}
+      >
+        我想領養
+      </Button>
+
+      {/* Modal with your form */}
+      <Modal visible={isModalVisible} onCancel={handleCancel} onOk={handleOk}>
+        <Form 
+        closeModal={handleCancel} 
+        handleNameChange={handleNameChange}
+          handleEmailChange={handleEmailChange}
+          handleContactChange={handleContactChange}
+          handleQuestionChange={handleQuestionChange}
+          handleTimeChange={handleTimeChange}
+          handleGenderChange={handleGenderChange}
+          gender={gender}
+          name={name}
+          email={email}
+          contact={contact}
+          question={question}
+          time={time}
+        />
+      </Modal>
       <Divider />
     </PageDiv>
   ) : (
     <PageDiv>
-      <Image style={{ borderRadius: "10px" }} src={petData.album_file !== undefined ? petData.album_file:ImageDefault} />
+      <Image
+        style={{ borderRadius: "10px" }}
+        src={
+          petData.album_file !== undefined ? petData.album_file : ImageDefault
+        }
+      />
       <TitleBlock>
         <SubTitleBlock>
           <Name>{petData.animal_kind === "狗" ? "Dog" : "Cat"} </Name>
           <GenderImage src={petData.animal_sex === "M" ? maleImg : femaleImg} />
-          
         </SubTitleBlock>
-        <Text style={{marginTop:"30px", color:"gray"}}> ( 等一個好名字 )</Text>
+        <Text style={{ marginTop: "30px", color: "gray" }}>
+          {" "}
+          ( 等一個名字 )
+        </Text>
       </TitleBlock>
       <TitleBlock>
         <CardContainer>
@@ -301,34 +433,38 @@ export function PetDetail() {
           </Card>
           <Card style={{ backgroundColor: "#fefae0" }}>
             <SubTitleInfo
-              style={{ fontSize: petData.animal_Variety.length >= 3 ? "60%" : "80%" }}
+              style={{
+                fontSize: petData.animal_Variety.length >= 3 ? "60%" : "80%",
+              }}
             >
               {petData.animal_Variety}
             </SubTitleInfo>
             <SubInfo
-              style={{ marginTop: petData.animal_Variety.length >= 3 ? "3px" : "60%" }}
+              style={{
+                marginTop: petData.animal_Variety.length >= 3 ? "3px" : "60%",
+              }}
             >
               品種
             </SubInfo>
           </Card>
           <Card style={{ backgroundColor: "#FFFFFF" }}>
-            <SubTitleInfo>{petData.shelter_address.substring(0,3)}</SubTitleInfo>
+            <SubTitleInfo>
+              {petData.shelter_address.substring(0, 3)}
+            </SubTitleInfo>
             <SubInfo>地區</SubInfo>
           </Card>
           <Card style={{ backgroundColor: "#fefae0" }}>
             <SubTitleInfo
-              style={{ color: petData.sterilization === "T" ? "#414833" : "gray" }}
+              style={{
+                color: petData.sterilization === "T" ? "#414833" : "gray",
+              }}
             >
               {petData.sterilization === "T" ? "Yes" : "No"}
             </SubTitleInfo>
             <SubInfo>絕育</SubInfo>
           </Card>
           <Card style={{ backgroundColor: "#dad7cd" }}>
-            <SubTitleInfo
-              style={{ color:"gray" }}
-            >
-              未知
-            </SubTitleInfo>
+            <SubTitleInfo style={{ color: "gray" }}>未知</SubTitleInfo>
             <SubInfo>驅蟲</SubInfo>
           </Card>
         </CardContainer>
@@ -371,9 +507,7 @@ export function PetDetail() {
           alt="description"
           style={{ width: "20px", height: "20px" }}
         />
-        <Text>
-         電話 {petData.shelter_tel}
-        </Text>
+        <Text>電話 {petData.shelter_tel}</Text>
       </AboutContainer>
       <TitleBlock
         style={{ fontSize: "15px", fontWeight: "bold", marginTop: "5px" }}
@@ -385,7 +519,7 @@ export function PetDetail() {
         allowfullscreen
         title="Google Maps"
       />
-  <Divider />
+      <Divider />
     </PageDiv>
   );
 }

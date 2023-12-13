@@ -19,11 +19,12 @@ export const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { setUser } = useContext(AuthContext);
+  const { user,setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
-
-
+  if(user){
+    navigate("/");
+  }
   const handleSignUpClick = () => {
     navigate("/users/register");
   };
@@ -49,9 +50,9 @@ export const LogIn = () => {
           setAuthToken(null);
           setError(response.toString());
         }
-        setUser(response.name);
+        setUser(response.userID);
       });
-      navigate("/members");
+      navigate("/");
     } catch (e) {
       console.error("Login error", e.response);
       setError("登入失敗，請檢查輸入訊息");

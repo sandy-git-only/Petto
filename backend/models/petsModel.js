@@ -1,7 +1,7 @@
 import { Pets } from "../utils/petsTable.js";
 import { Images } from "../utils/imagesTable.js";
 import sequelize from "../middlewares/db.js";
-
+import { Users } from "../utils/usersTable.js";
 Images.removeAttribute("id");
 Pets.hasMany(Images, { foreignKey: "petID", as: "images" });
 Images.belongsTo(Pets, { foreignKey: "petID" });
@@ -36,9 +36,16 @@ export async function insertVediosTable(videosUrl) {
 
 export async function getPetsDetailById(id) {
   try {
-    await sequelize.sync();
+    // await sequelize.sync();
     const pets = await Pets.findOne({
       where: { id },
+      include: [
+        {
+          model: Users,
+          attributes: ['id', 'name', 'email'],
+          where: { id: sequelize.col('Pets.userID') }, 
+        },
+      ],
     });
 
     if (pets) {
@@ -47,7 +54,7 @@ export async function getPetsDetailById(id) {
       });
       return { pets, images };
     } else {
-      console.log("Pets not found in petsModel:getPetsDetailById");
+      console.error("Pets not found in petsModel:getPetsDetailById");
       return null;
     }
   } catch (error) {
@@ -117,7 +124,6 @@ export async function getPetsByConditionCount(conditionValue) {
 
 export async function getPetsDetailByUserId(userID) {
   try {
-    console.log("userID",userID)
     // await sequelize.sync();
     const pets = await Pets.findAll({
       where: { userID },

@@ -53,7 +53,7 @@ export function Header() {
     <>
     <HeaderContainer isMenuOpen={isMenuOpen}>
       <MenuImgContainer onClick={toggleMenu}>
-        <MenuImg src={isMenuOpen ? '/images/close.png' : '/images/stats.svg'} alt='Menu' />
+        <MenuImg src={isMenuOpen ? './images/close.png' : '/images/stats.svg'} alt='Menu' />
       </MenuImgContainer>
       <Link to="/"><Logo src="/images/petto-logo.png" alt="logo" /></Link>
       {user ? (
@@ -74,7 +74,9 @@ export function Header() {
         <Link to="/pets/gps" style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleTextChange}>
         <Text>GPS找緣分</Text>
         </Link>
+        <Link to="/members/match-application" style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleTextChange}>
         <Text>申請配對通知</Text>
+        </Link>
       </MenuOptions>
       </>
   );

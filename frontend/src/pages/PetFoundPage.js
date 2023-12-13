@@ -17,6 +17,8 @@ import { District } from "../components/Members/region.js";
 import Swal from 'sweetalert2';
 import { useContext } from 'react';
 import { AuthContext } from '../utils/contexts';
+import LoadingOverlay from "../components/Global/progress.js";
+
 export function PetFound() {
   const [breed, setBreed] = useState("");
   const [otherBreed, setOtherBreed] = useState("");
@@ -34,6 +36,7 @@ export function PetFound() {
   const [fileList, setFileList] = useState([]);
   const [otherColor, setOtherColor] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [loading, setLoading] = useState(false);
   const category = "拾獲";
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -75,6 +78,7 @@ export function PetFound() {
 
   const handleSubmit = async ({ e, fileList }) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const fileData = new FormData();
       const city = selectedDistrict[0];
@@ -119,13 +123,12 @@ export function PetFound() {
           showConfirmButton: false,
           timer: 1500,
         });
-        await navigate("/");
       }
-
-      // console.log('Upload success:', petsResponse.data);
-      // console.log("getGPSsuccess", gpsResponse);
+      setLoading(false);
     } catch (error) {
       console.error("Error uploading file:", error);
+    } finally {
+      await navigate("/");
     }
   };
 
@@ -159,6 +162,7 @@ export function PetFound() {
 
   return (
     <PageDiv>
+    {loading && <LoadingOverlay />}
       <FormContainer>
         <form onSubmit={(e) => handleSubmit({ e, fileList })}>
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -289,7 +293,7 @@ export function PetFound() {
             <TextArea placeholder="可以具體說明哪裡撿到、特徵、目前動物狀態(安置中/動物醫院...等)" value={description} onChange={handleDescriptionChange} />
             <ImageCrop fileList={fileList} setFileList={setFileList} />
           </FormGroup>
-          <SubmitButton type="submit">提交</SubmitButton>
+          <SubmitButton type="submit" disabled={loading}>Submit</SubmitButton>
         </form>
       </FormContainer>
     </PageDiv>

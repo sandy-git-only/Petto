@@ -17,6 +17,8 @@ import { District } from "../components/Members/region.js";
 import Swal from 'sweetalert2';
 import { useContext } from 'react';
 import { AuthContext } from '../utils/contexts';
+import LoadingOverlay from "../components/Global/progress.js";
+
 export function PetMissing() {
   const [breed, setBreed] = useState("");
   const [otherBreed, setOtherBreed] = useState("");
@@ -34,6 +36,7 @@ export function PetMissing() {
   const [fileList, setFileList] = useState([]);
   const [otherColor, setOtherColor] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [loading, setLoading] = useState(false);
   const category = "走失";
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -75,8 +78,7 @@ export function PetMissing() {
 
   const handleSubmit = async ({ e, fileList }) => {
     e.preventDefault();
-    console.log("main_image", fileList[0].originFileObj);
-    // console.log("main_image",  fileList[1].originFileObj);
+    setLoading(true);
     try {
       const fileData = new FormData();
       const city = selectedDistrict[0];
@@ -119,15 +121,15 @@ export function PetMissing() {
           title: '成功送出表單',
           text: '提醒：可以申請配對通知，如果有找到特徵相符的寵物就會收到通知喔',
           showConfirmButton: false,
-          timer: 1500,
+          timer: 2000,
         });
-        navigate("/");
+        
       }
-
-      // console.log('Upload success:', petsResponse.data);
-      // console.log("getGPSsuccess", gpsResponse);
+      setLoading(true);
     } catch (error) {
       console.error("Error uploading file:", error);
+    } finally {
+      navigate("/");
     }
   };
 
@@ -161,6 +163,7 @@ export function PetMissing() {
 
   return (
     <PageDiv>
+    {loading && <LoadingOverlay />}
       <FormContainer>
         <form onSubmit={(e) => handleSubmit({ e, fileList })}>
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -291,7 +294,9 @@ export function PetMissing() {
             <TextArea placeholder="可以詳細寫特徵、是否有晶片...等等" value={description} onChange={handleDescriptionChange} />
             <ImageCrop fileList={fileList} setFileList={setFileList} />
           </FormGroup>
-          <SubmitButton type="submit">提交</SubmitButton>
+          <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
+          <SubmitButton type="submit" disabled={loading}>Submit</SubmitButton>
+          </div>
         </form>
       </FormContainer>
     </PageDiv>
