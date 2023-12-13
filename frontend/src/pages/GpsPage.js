@@ -76,7 +76,7 @@ const locationImg = "/images/location.png";
 const LostImg = "/images/lost.png";
 const AdoptSmall = "/images/pet-adopt.png";
 const ForAdoptionImg = "/images/pets-marker.png";
-const geoJsonFilePath = `${process.env.REACT_APP_BASE_URL}/geoJson`;
+const geoJsonFilePath = `${process.env.REACT_APP_BASE_URL}/geojson`;
 const response = await axios.get(geoJsonFilePath);
 const geojsonData = response.data;
 // Extract coordinates from GeoJSON features
