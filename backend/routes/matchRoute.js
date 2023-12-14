@@ -49,11 +49,12 @@ const sendEmail = async (recipientEmail, petsNum) => {
         Html: {
           Charset: "UTF-8",
           Data: 
-          `<h3> 📢 你關注的寵寵出現囉 🐶🐱</h3>
+          `<h3> 你關注的寵寵出現囉 🐶🐱</h3>
           <br />
           <p> 快到Petto看看! </p> 
           <br />  
-          ------------------------------
+          <br />  
+          ---
           <br />            
           <img src="https://petto.s3.ap-northeast-1.amazonaws.com/pets-images/petto-logo.PNG" style="width: 100px; height: auto;" />
           <br />
@@ -68,7 +69,7 @@ const sendEmail = async (recipientEmail, petsNum) => {
       },
       Subject: {
         Charset: "UTF-8",
-        Data: `Petto: 配對成功！有${petsNum} 隻寵寵等你喔 `,
+        Data: `📢 Petto: 配對成功！有${petsNum} 隻寵寵等你喔 `,
       },
     },
   };

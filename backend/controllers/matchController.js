@@ -63,11 +63,23 @@ export async function publishMatched(req, res) {
 export async function userPetsMatchedinsertDB(userID) {
   try {
     const matchedResult = await postUserMatchingPets(userID);
+    console.log("matchedResult....",matchedResult);
     await Promise.all(
       matchedResult.matchedPairs.map(async (pet) => {
           const matchesData = {
             userID: matchedResult.userID,
-            petID:  pet.petID
+            petID:  pet.petID,
+            shelterID:null
+          };
+          insertMatchesTable(matchesData)
+      })
+    );
+    await Promise.all(
+      matchedResult.matchedShelterPairs.map(async (pet) => {
+          const matchesData = {
+            userID: matchedResult.userID,
+            shelterID:  pet.shelterID,
+            petID: null
           };
           insertMatchesTable(matchesData)
       })

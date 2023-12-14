@@ -2,6 +2,7 @@ import { Pets } from "../utils/petsTable.js";
 import { Images } from "../utils/imagesTable.js";
 import sequelize from "../middlewares/db.js";
 import { Users } from "../utils/usersTable.js";
+import { Shelters } from "../utils/sheltersTable.js";
 Images.removeAttribute("id");
 Pets.hasMany(Images, { foreignKey: "petID", as: "images" });
 Images.belongsTo(Pets, { foreignKey: "petID" });
@@ -140,6 +141,51 @@ export async function getPetsDetailByUserId(userID) {
     //   console.log("Pets not found in petsModel:getPetsDetailByUserId");
     //   return null;
     // }
+  } catch (error) {
+    console.error("Error retrieving pets details:", error);
+    return null;
+  }
+};
+
+export async function getPetsByConditionForShelter(
+  conditionValue,
+  perPageItems,
+  itemIndex
+) {
+  try {
+    const pets = await Shelters.findAll({
+      where: conditionValue ,
+      limit: perPageItems,
+      offset: itemIndex,
+    });
+
+    return pets;
+  } catch (error) {
+    console.error("getPetsByConditonerror:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+}
+
+export async function getPetsByConditionCountForShelter(conditionValue) {
+  try {
+    const countResult = await Shelters.count({
+      where: conditionValue
+    });
+    return countResult;
+  } catch (error) {
+    console.error("getPetsByConditionCount error:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+}
+
+
+export async function getPetsDetailByIdForShelter(id) {
+  try {
+    // await sequelize.sync();
+    const pets = await Shelters.findOne({
+      where: { id },
+    });
+      return pets ;
   } catch (error) {
     console.error("Error retrieving pets details:", error);
     return null;

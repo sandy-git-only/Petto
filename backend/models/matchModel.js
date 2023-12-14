@@ -4,6 +4,7 @@ import sequelize from "../middlewares/db.js";
 import { Users } from "../utils/usersTable.js";
 import { Pets } from "../utils/petsTable.js";
 import { Matches } from "../utils/matchesTable.js";
+import { Shelters } from "../utils/sheltersTable.js";
 export async function insertNotificationsTable(notificationsData) {
   try {
     const notificationsResponse = await Notifications.create(notificationsData);
@@ -20,6 +21,7 @@ export async function insertMatchesTable(matchesData) {
       where: {
         userID: matchesData.userID,
         petID: matchesData.petID,
+        shelterID : matchesData.shelterID,
       },
     });
     if (!existingMatch) {
@@ -107,26 +109,36 @@ export async function findUserMatches(userID) {
     const matches = await Matches.findAll({
       where: { userID },
     });
-
+    
     if (!matches || matches.length === 0) {
       console.log("No matches found for the specified userID");
       return null;
     }
-
+    
     const matchDetails = await Promise.all(
       matches.map(async (match) => {
         const petID = match.petID;
-        const petData = await Pets.findOne({
-          where: { id: petID },
-          attributes: ['id','name', 'main_image','gender','type','anthel','ligation','vaccine','age'], 
-        });
+        const shelterID = match.shelterID
+        let petData;
+        let shelterPetData;
+          // If petID is from Shelters table
+          shelterPetData = await Shelters.findOne({
+            where: { id: shelterID },
+            attributes: ['id', 'name', 'main_image', 'gender', 'type', 'anthel', 'ligation','city' ,'age','district'],
+          });
+       
+          // If petID is from Pets table
+          petData = await Pets.findOne({
+            where: { id: petID },
+            attributes: ['id', 'name', 'main_image', 'gender', 'type', 'anthel', 'ligation', 'vaccine', 'age', 'city', 'district'],
+          });
         return {
           match,
           petData,
+          shelterPetData
         };
       })
     );
-
     return matchDetails;
   } catch (error) {
     console.error("Error finding user matches:", error);
@@ -149,7 +161,8 @@ export async function postUserMatchingPets(userID) {
         city:notification.city,
         district:notification.district,
       } ;
-      const matchingResults = await Pets.findAll({
+      try {
+        const matchingResults = await Pets.findAll({
         where: {
           [Op.and]: [
             notificationData.animalClass !== null
@@ -157,21 +170,51 @@ export async function postUserMatchingPets(userID) {
               : { animalClass: { [Op.not]: null } },
               notificationData.gender !== null ? { gender:notificationData.gender } : { gender: { [Op.not]: null } },
               notificationData.type !== null ? { type:notificationData.type } : { type: { [Op.not]: null } },
-              notificationData.color !== null ? { color:notificationData.city } : { color: { [Op.not]: null } },
+              notificationData.color !== null ? { color:notificationData.color } : { color: { [Op.not]: null } },
               notificationData.city !== null ? { city:notificationData.city } : { city: { [Op.not]: null } },
-              notificationData.district !== null ? { district:notificationData.city } : { district: { [Op.not]: null } },
+              notificationData.district !== null ? { district:notificationData.district } : { district: { [Op.not]: null } },
           ],
         },
       });
+
+      const matchingShelterResults = await Shelters.findAll({
+        where: {
+          [Op.and]: [
+            notificationData.animalClass !== null
+              ? { animalClass:notificationData.animalClass }
+              : { animalClass: { [Op.not]: null } },
+              notificationData.gender !== null ? { gender:notificationData.gender } : { gender: { [Op.not]: null } },
+              notificationData.type !== null ? { type:notificationData.type.trim() } : { type: { [Op.not]: null } },
+              notificationData.color !== null ? { color:notificationData.color.trim() } : { color: { [Op.not]: null } },
+              notificationData.city !== null ? { city:notificationData.city } : { city: { [Op.not]: null } },
+              notificationData.district !== null ? { district:notificationData.district } : { district: { [Op.not]: null } },
+          ],
+        },
+        logging: console.log,
+      });
+
       const matchedPairs = matchingResults.map((pet) => ({
         petID: pet.id,
       }));
+
+      const matchedShelterPairs = matchingShelterResults
+      .slice(0, 10) // Extract the first 10 entries
+      .map((pet) => ({
+        shelterID: pet.id
+      }));
+      
       var userPetsMatchedList = [];
-      const petsNum = matchedPairs.length;
+      const petsNum = matchedPairs.length + matchedShelterPairs.length;
+
+
       if (notification.email) {
-        userPetsMatchedList = { userID:notification.userID, email:notification.email, petsNum , matchedPairs };
+        userPetsMatchedList = { userID:notification.userID, email:notification.email, petsNum , matchedPairs ,matchedShelterPairs };
       };
       return userPetsMatchedList;
+      } catch (error) {
+        console.error('Error executing Sequelize queries:', error);
+      }
+      
   } catch (err) {
     console.error(err);
     throw err;

@@ -5,7 +5,7 @@ import {
   insertUsersTable,
   checkUserFromDB,
   generateJWTAceessToken,
-  getUserProfile
+  getUserProfile,
 } from "../models/userModel.js";
 const saltRounds = 10;
 
@@ -94,57 +94,76 @@ export async function userSignUp(req, res) {
       );
     });
   });
-};
+}
 
 export async function userSignIn(req, res) {
-  const requestData = req.body;
-  const userEmail = requestData.email;
-  const userPassword = requestData.password;
-  const results = await checkUserFromDB(userEmail);
-  const userPasswordInDb = results[0].password;
-  bcrypt.compare(userPassword, userPasswordInDb, (compareError, isMatch) => {
-    if (compareError) throw compareError;
-    if (!isMatch) {
-      return res.status(403).json({ error: "Incorrect Password:" });
-    } else {
-      let payload = {
-        id: results[0].id,
-        name: results[0].name,
-        email: results[0].email,
-        // role: results[0].role,
-      };
-      let access_token;
-      try {
-        const decodedToken = jwt.verify(req.token, process.env.JWT_SECRET); // Use the same secret key used to sign the token
-        if (decodedToken.exp < Date.now() / 1000) {
-          // Token has expired, generate a new one
-          access_token = generateJWTAceessToken(payload);
-        } else {
-          // Token is still valid, use the existing one
-          access_token = req.token;
+  try {
+    const requestData = req.body;
+    const userEmail = requestData.email;
+    const userPassword = requestData.password;
+    const results = await checkUserFromDB(userEmail);
+    if (results && results.length > 0) {
+      const userPasswordInDb = results[0].password;
+
+      bcrypt.compare(
+        userPassword,
+        userPasswordInDb,
+        (compareError, isMatch) => {
+          if (compareError) throw compareError;
+          if (!isMatch) {
+            return res.status(403).json({ error: "Incorrect Password:" });
+          } else {
+            let payload = {
+              id: results[0].id,
+              name: results[0].name,
+              email: results[0].email,
+              // role: results[0].role,
+            };
+            let access_token;
+            try {
+              const decodedToken = jwt.verify(
+                req.token,
+                process.env.JWT_SECRET
+              ); // Use the same secret key used to sign the token
+              if (decodedToken.exp < Date.now() / 1000) {
+                // Token has expired, generate a new one
+                access_token = generateJWTAceessToken(payload);
+              } else {
+                // Token is still valid, use the existing one
+                access_token = req.token;
+              }
+            } catch (verifyError) {
+              // Token verification failed, generate a new one
+              access_token = generateJWTAceessToken(payload);
+            } finally {
+              const successResponse = {
+                data: {
+                  access_token: access_token,
+                  access_expired: 3600,
+                  user: {
+                    id: results[0].id,
+                    provider: "native",
+                    name: results[0].name,
+                    email: userEmail,
+                    // role: results[0].role,
+                    // picture: "None",
+                  },
+                },
+              };
+
+              res.status(200).json(successResponse);
+            }
+          }
         }
-      } catch (verifyError) {
-        // Token verification failed, generate a new one
-        access_token = generateJWTAceessToken(payload);
-      }
-      const successResponse = {
-        data: {
-          access_token: access_token,
-          access_expired: 3600,
-          user: {
-            id: results[0].id,
-            provider: "native",
-            name: results[0].name,
-            email: userEmail,
-            // role: results[0].role,
-            // picture: "None",
-          },
-        },
-      };
-      res.status(200).json(successResponse);
+      );
+    } else {
+      return res.status(404).json({ error: "User not found." });
     }
-  });
-};
+  } catch (error) {
+    console.error("Error in userSignIn:", error);
+    return res.status(500).json({ error: "Internal Server Error." });
+  }
+}
 
 export async function userProfile(req, res) {
   const authorizationHeader = req.headers.authorization;
@@ -157,22 +176,21 @@ export async function userProfile(req, res) {
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   const userId = decoded.payload.id;
   try {
-    const result = await getUserProfile(userId)
-      if (!result || result.length === 0) {
-        return res.status(404).json({ error: "User profile not found" });
-      }
-      // console.log("getuserProfile:", result);
-      const successResponse = {
-        userID:userId,
-        provider: "native",
-        name: result[0].name,
-        email: result[0].email,
-        // role: result[0].role,
-        // "pictiure": "None"
-      };
-      res.status(200).json({ data: successResponse });
+    const result = await getUserProfile(userId);
+    if (!result || result.length === 0) {
+      return res.status(404).json({ error: "User profile not found" });
+    }
+    // console.log("getuserProfile:", result);
+    const successResponse = {
+      userID: userId,
+      provider: "native",
+      name: result[0].name,
+      email: result[0].email,
+      // role: result[0].role,
+      // "pictiure": "None"
+    };
+    res.status(200).json({ data: successResponse });
   } catch {
     res.status(401).json({ error: "Invalid token." });
   }
-};
-
+}

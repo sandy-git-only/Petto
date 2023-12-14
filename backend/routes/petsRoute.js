@@ -5,7 +5,7 @@ const router = express.Router();
 const upload = multer();
 import querystring  from "querystring";
 import axios from 'axios';
-import { createPetsInfo, reqPetsDetailById, reqPetsByCondition,reqPetsDetailByUserId }  from "../controllers/petsController.js";
+import { createPetsInfo, reqPetsDetailById, reqPetsByCondition,reqPetsDetailByUserId,getSheltersAPI,reqPetsByConditionForShelter,reqPetsDetailByIdForShelter }  from "../controllers/petsController.js";
 
 router.post("/create",
   upload.fields([
@@ -69,4 +69,13 @@ router.get('/conditions/:conditions', (req, res) => {
 router.get('/details', (req, res) =>  reqPetsDetailById(req, res));
 router.get('/user-post', (req, res) =>  reqPetsDetailByUserId(req, res));
 
+
+router.get('/shelters', (req, res) =>  getSheltersAPI(req, res))
+router.get('/shelters/all', (req, res) => reqPetsByConditionForShelter(req, res))
+router.get('/shelters/details',(req, res) => reqPetsDetailByIdForShelter(req, res))
+router.get('/shelters/conditions/:conditions',(req, res) => {
+  const conditions = req.params.conditions;
+  const parsedConditions = querystring.parse(conditions);
+  reqPetsByConditionForShelter(req, res, parsedConditions);
+});
 export { router };
