@@ -172,10 +172,10 @@ export async function userProfile(req, res) {
     return res.status(401).json({ error: "Unauthorized token" });
   }
   const token = authorizationHeader.split("Bearer ")[1]; // 去掉 'Bearer ' 前缀
-
+  try {
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   const userId = decoded.payload.id;
-  try {
+ 
     const result = await getUserProfile(userId);
     if (!result || result.length === 0) {
       return res.status(404).json({ error: "User profile not found" });
