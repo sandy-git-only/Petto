@@ -13,11 +13,11 @@ import cors from 'cors';
 dotenv.config();
 // Enable CORS
 app.use(cors());
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'https://pettotw.com/');
-//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//   next();
-// });
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://www.pettotw.com');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   next();
