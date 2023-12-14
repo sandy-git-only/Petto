@@ -9,7 +9,7 @@ import {
   getPetsByConditionForShelter,
   getPetsDetailByIdForShelter
 } from "../models/petsModel.js";
-import redisCache from "../middlewares/redis.js";
+// import redisCache from "../middlewares/redis.js";
 import { insertGeoLocationDB } from "../models/gpsModel.js";
 import { geocoder } from "../middlewares/geocode.js";
 import reqPetsLocations from "../controllers/gpsController.js";
@@ -243,14 +243,15 @@ function UserformatRes(pet) {
 }
 export async function reqPetsDetailById(req, res) {
   const id = req.query.id;
-  const cacheKey = `pet:${id}`;
+  // const cacheKey = `pet:${id}`;
   try {
-    let results = await redisCache(
-      async () => getPetsDetailById(id),
-      cacheKey,
-      req,
-      res
-    );
+    // let results = await redisCache(
+    //   async () => getPetsDetailById(id),
+    //   cacheKey,
+    //   req,
+    //   res
+    // );
+    let results = await getPetsDetailById(id)
     const { pets, images } = results;
     console.log("users", pets.User.email);
     const petsDetails = formatRes(pets, images);
@@ -263,14 +264,15 @@ export async function reqPetsDetailById(req, res) {
 
 export async function reqPetsDetailByIdForShelter(req, res) {
   const id = req.query.id;
-  const cacheKey = `pet:${id}`;
+  // const cacheKey = `pet:${id}`;
   try {
-    let results = await redisCache(
-      async () => getPetsDetailByIdForShelter(id),
-      cacheKey,
-      req,
-      res
-    );
+    // let results = await redisCache(
+    //   async () => getPetsDetailByIdForShelter(id),
+    //   cacheKey,
+    //   req,
+    //   res
+    // );
+    let results = await getPetsDetailByIdForShelter(id);
     const pets = results;
     const petsDetails = formatResForShelter(pets);
     res.json({ data: petsDetails });
