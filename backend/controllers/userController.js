@@ -105,13 +105,11 @@ export async function userSignIn(req, res) {
     if (results && results.length > 0) {
       const userPasswordInDb = results[0].password;
 
-      bcrypt.compare(
-        userPassword,
-        userPasswordInDb,
-        (compareError, isMatch) => {
-          if (compareError) throw compareError;
-          if (!isMatch) {
-            return res.status(403).json({ error: "Incorrect Password:" });
+      try {
+        const isMatch = await bcrypt.compare(userPassword, userPasswordInDb);
+    
+        if (!isMatch) {
+          return res.status(403).json({ error: "Incorrect Password:" });
           } else {
             let payload = {
               id: results[0].id,
@@ -150,12 +148,14 @@ export async function userSignIn(req, res) {
                   },
                 },
               };
-
               res.status(200).json(successResponse);
             }
           }
+        } 
+        catch (compareError) {
+          console.error("Error comparing passwords:", compareError);
+          return res.status(500).json({ error: "Internal Server Error." });
         }
-      );
     } else {
       return res.status(404).json({ error: "User not found." });
     }
