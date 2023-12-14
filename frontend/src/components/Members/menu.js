@@ -36,13 +36,14 @@ export const Text = styled.text`
 `;
 
 export const PageDiv = styled.div`
-  width: 100%;
+  /* width: 100vw; */
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   justify-content: center;
   align-items: center;
-  padding: 10px 10px;
+  gap:10px
+  /* padding: 10px 10px; */
 `;
 
 export const TitleImg = styled.img`

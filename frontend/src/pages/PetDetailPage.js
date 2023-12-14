@@ -17,11 +17,8 @@ import {
   Text,
   TextContainer,
 } from "../components/PetsDetails/subtitleInfo.js";
-import {
-  TitleBlock,
-  Name,
-} from "../components/PetsDetails/titleInfo.js";
-import { MapFrame,} from "../components/PetsDetails/adopt.js";
+import { TitleBlock, Name } from "../components/PetsDetails/titleInfo.js";
+import { MapFrame } from "../components/PetsDetails/adopt.js";
 import {
   FormContainer,
   FormGroup,
@@ -41,7 +38,7 @@ const descriptionImg = "/images/description.png";
 const userImg = "/images/user.png";
 const shelterImg = "/images/shelter.png";
 const ImageDefault = "/images/image-default.png";
-
+const telImg = "/images/telephone.png";
 
 const Form = ({
   handleNameChange,
@@ -57,11 +54,6 @@ const Form = ({
   question,
   time,
 }) => {
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  // };
-  
-
   return (
     // <FormContainer onSubmit={handleSubmit}>
     <FormContainer>
@@ -148,9 +140,6 @@ const Form = ({
   );
 };
 
-
-
-
 export function PetDetail() {
   const { id } = useParams();
   const location = useLocation();
@@ -167,24 +156,24 @@ export function PetDetail() {
   const [question, setQuestion] = useState("");
   const [time, setTime] = useState("");
 
-    const handleGenderChange = (e) => {
-      setGender(e.target.value);
-    };
-    const handleNameChange = (e) => {
-      setName(e.target.value);
-    };
-    const handleEmailChange = (e) => {
-      setEmail(e.target.value);
-    };
-    const handleContactChange = (e) => {
-      setContact(e.target.value);
-    };
-    const handleQuestionChange = (e) => {
-      setQuestion(e.target.value);
-    };
-    const handleTimeChange = (e) => {
-      setTime(e.target.value);
-    };
+  const handleGenderChange = (e) => {
+    setGender(e.target.value);
+  };
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+  const handleContactChange = (e) => {
+    setContact(e.target.value);
+  };
+  const handleQuestionChange = (e) => {
+    setQuestion(e.target.value);
+  };
+  const handleTimeChange = (e) => {
+    setTime(e.target.value);
+  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -200,10 +189,11 @@ export function PetDetail() {
     contact: contact,
     time: time,
     gender: gender,
-    recipient: petData.email
+    recipient: petData.email,
   };
   const handleOk = () => {
-    axios.post(`${process.env.REACT_APP_BASE_URL}/matches/send-adoption`, data, {
+    axios
+      .post(`${process.env.REACT_APP_BASE_URL}/matches/send-adoption`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -222,12 +212,10 @@ export function PetDetail() {
       });
   };
 
-  const govPetsAPI =
-    "https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL";
+  const govPetsAPI = `${process.env.REACT_APP_PETS_LIST_API_URL}/shelters/details?id=${id}`;
 
   const databaseQueryKey = ["details", id];
   const govApiQueryKey = ["govDataDetails", id];
-
   const {
     data: pet,
     isLoading,
@@ -238,8 +226,7 @@ export function PetDetail() {
         const response = await axios(govPetsAPI);
         setGovData(response.data);
         setIsLoadingGovData(false);
-        const petData =
-          response.data.find((govPet) => govPet.animal_id == id) || {};
+        const petData = response.data.data;
         setPetData(petData);
         return petData;
       } else {
@@ -256,8 +243,6 @@ export function PetDetail() {
       throw error;
     }
   });
- 
-  
 
   if (isLoading) {
     return <LoadingOverlay />;
@@ -266,7 +251,7 @@ export function PetDetail() {
   if (isError) {
     return <p>Error fetching product data</p>;
   }
-  
+
   const REACT_APP_MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
   return !fromGovData && petData.type.length ? (
     <PageDiv>
@@ -283,7 +268,7 @@ export function PetDetail() {
       <TitleBlock>
         <CardContainer>
           <Card style={{ backgroundColor: "#dad7cd" }}>
-            <SubTitleInfo>{petData.age} Y</SubTitleInfo>
+            <SubTitleInfo>{petData.age}Y</SubTitleInfo>
             <SubInfo>Age</SubInfo>
           </Card>
           <Card style={{ backgroundColor: "#fefae0" }}>
@@ -376,11 +361,11 @@ export function PetDetail() {
         title="Google Maps"
       />
       <Divider />
-      <text style={{ color: "#8d0801", fontSize: "0.8rem" }}>
+      <text style={{ color: "#8d0801", fontSize: "0.6rem" }}>
         填寫表單，聯絡送養人
       </text>
       <Button
-        style={{ backgroundColor: "#f26419" }}
+        style={{ backgroundColor: "#354f52" }}
         type="primary"
         onClick={showModal}
       >
@@ -389,9 +374,9 @@ export function PetDetail() {
 
       {/* Modal with your form */}
       <Modal visible={isModalVisible} onCancel={handleCancel} onOk={handleOk}>
-        <Form 
-        closeModal={handleCancel} 
-        handleNameChange={handleNameChange}
+        <Form
+          closeModal={handleCancel}
+          handleNameChange={handleNameChange}
           handleEmailChange={handleEmailChange}
           handleContactChange={handleContactChange}
           handleQuestionChange={handleQuestionChange}
@@ -412,13 +397,13 @@ export function PetDetail() {
       <Image
         style={{ borderRadius: "10px" }}
         src={
-          petData.album_file !== undefined ? petData.album_file : ImageDefault
+          petData.main_image !== undefined ? petData.main_image : ImageDefault
         }
       />
       <TitleBlock>
         <SubTitleBlock>
-          <Name>{petData.animal_kind === "狗" ? "Dog" : "Cat"} </Name>
-          <GenderImage src={petData.animal_sex === "M" ? maleImg : femaleImg} />
+          <Name>{petData.animalClass === "狗" ? "Dog" : "Cat"} </Name>
+          <GenderImage src={petData.gender === "M" ? maleImg : femaleImg} />
         </SubTitleBlock>
         <Text style={{ marginTop: "30px", color: "gray" }}>
           {" "}
@@ -428,38 +413,36 @@ export function PetDetail() {
       <TitleBlock>
         <CardContainer>
           <Card style={{ backgroundColor: "#dad7cd" }}>
-            <SubTitleInfo>{petData.animal_age}</SubTitleInfo>
+            <SubTitleInfo>{petData.age || "未提供"}</SubTitleInfo>
             <SubInfo>Age</SubInfo>
           </Card>
           <Card style={{ backgroundColor: "#fefae0" }}>
             <SubTitleInfo
               style={{
-                fontSize: petData.animal_Variety.length >= 3 ? "60%" : "80%",
+                fontSize: petData.type.trim().length >= 3 ? "60%" : "80%",
               }}
             >
-              {petData.animal_Variety}
+              {petData.type}
             </SubTitleInfo>
             <SubInfo
               style={{
-                marginTop: petData.animal_Variety.length >= 3 ? "3px" : "60%",
+                marginTop: petData.type.trim().length >= 3 ? "3px" : "60%",
               }}
             >
               品種
             </SubInfo>
           </Card>
           <Card style={{ backgroundColor: "#FFFFFF" }}>
-            <SubTitleInfo>
-              {petData.shelter_address.substring(0, 3)}
-            </SubTitleInfo>
+            <SubTitleInfo>{petData.city.substring(0, 3)}</SubTitleInfo>
             <SubInfo>地區</SubInfo>
           </Card>
           <Card style={{ backgroundColor: "#fefae0" }}>
             <SubTitleInfo
               style={{
-                color: petData.sterilization === "T" ? "#414833" : "gray",
+                color: petData.ligation === "T" ? "#414833" : "gray",
               }}
             >
-              {petData.sterilization === "T" ? "Yes" : "No"}
+              {petData.ligation === "T" ? "Yes" : "No"}
             </SubTitleInfo>
             <SubInfo>絕育</SubInfo>
           </Card>
@@ -481,7 +464,7 @@ export function PetDetail() {
             alt="user"
             style={{ width: "20px", height: "20px" }}
           />
-          <Text>{petData.shelter_name}</Text>
+          <Text>{petData.place}</Text>
         </TextContainer>
         <TextContainer></TextContainer>
         <TextContainer>
@@ -490,7 +473,7 @@ export function PetDetail() {
             alt="vaccine"
             style={{ width: "20px", height: "20px" }}
           />
-          <Text>{petData.bacterin === "T" ? "Yes" : "No"}</Text>
+          <Text>{petData.anthel === "T" ? "Yes" : "No"}</Text>
         </TextContainer>
         <TextContainer>
           <img
@@ -498,16 +481,30 @@ export function PetDetail() {
             alt="feature"
             style={{ width: "20px", height: "20px" }}
           />
-          <Text>等你發掘</Text>
+          <Text>{petData.feature || "暫無提供特徵細節"}</Text>
+        </TextContainer>
+        <TextContainer>
+          <br />
+          <img
+            src={telImg}
+            alt="tel"
+            style={{ width: "20px", height: "20px" }}
+          />
+          <Text>{petData.tel}</Text>
         </TextContainer>
         <Divider />
-        <br />
-        <img
-          src={descriptionImg}
-          alt="description"
-          style={{ width: "20px", height: "20px" }}
-        />
-        <Text>電話 {petData.shelter_tel}</Text>
+        <TextContainer>
+          <img
+            src={descriptionImg}
+            alt="description"
+            style={{ width: "20px", height: "20px" }}
+          />
+          <Text>
+            {petData.description === null
+              ? "可以直接打給收容所問更多細節喔"
+              : `發現地: ${petData.description}`}
+          </Text>
+        </TextContainer>
       </AboutContainer>
       <TitleBlock
         style={{ fontSize: "15px", fontWeight: "bold", marginTop: "5px" }}
@@ -515,7 +512,7 @@ export function PetDetail() {
         Where You Can Find Me
       </TitleBlock>
       <MapFrame
-        src={`https://www.google.com/maps/embed/v1/place?key=${REACT_APP_MAPS_API_KEY}&q=${petData.shelter_address}`}
+        src={`https://www.google.com/maps/embed/v1/place?key=${REACT_APP_MAPS_API_KEY}&q=${petData.place}`}
         allowfullscreen
         title="Google Maps"
       />

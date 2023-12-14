@@ -8,7 +8,7 @@ const FooterContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
+  height: 20px;
   width: 100%;
 
   @media (max-width:1279px){
@@ -25,7 +25,10 @@ const InnerContainer = styled.div`
   align-items: center;
 `;
 
-
+const Text = styled.div`
+  font-size: 0.6rem;
+  color:gray;
+`
 
 
 export const  Footer = () => {
@@ -33,8 +36,11 @@ export const  Footer = () => {
     return (
       <FooterContainer>
           <InnerContainer>
+          <Text>關於Petto</Text>
           <RxSlash color='676574' fontSize="15px"/>
+          <Text>聯絡我們</Text>
           <RxSlash color='676574' fontSize="15px"/>
+          <Text>網站條款</Text>
         </InnerContainer>
       </FooterContainer>
     );

@@ -4,6 +4,7 @@ import {
   Cascader,
   Form,
 } from 'antd';
+const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL
 
 export const District = ({onDistrictChange }) => {
   const [districtOptions, setDistrictOptions] = useState([]);
@@ -11,7 +12,7 @@ export const District = ({onDistrictChange }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/1.0/taiwan-districts');
+        const response = await axios.get(`${REACT_APP_BASE_URL}/api/1.0/taiwan-districts`);
         const formattedOptions = response.data.map(city => {
           const cityOptions = city.districts.map(district => ({
             value: district.name,

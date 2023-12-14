@@ -2,6 +2,7 @@ import { Routes, Route, Navigate  } from "react-router-dom";
 import { React, useState, useEffect} from "react";
 import { Header, Footer, FloatingButton, GlobalStyle, AppContainer,ContentContainer } from "./components";
 import { Home } from "./pages/HomePage.js";
+import { HomeShelter } from "./pages/HomeShelterPage.js";
 import {PetDetail} from "./pages/PetDetailPage.js";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { PetCreate } from "./pages/PetCreatePage.js";
@@ -43,6 +44,7 @@ function App() {
         <ContentContainer>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/shelters" element={<HomeShelter />} />
             <Route path="/pets/details/:id" element={<PetDetail />} />
             <Route path="/pets/create" element={user ? <PetCreate /> : <Navigate to="/users/login" />} />
             <Route path="/pets/missing" element={user ? <PetMissing />: <Navigate to="/users/login" />} />

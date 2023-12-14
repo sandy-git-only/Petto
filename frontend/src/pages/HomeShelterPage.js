@@ -7,7 +7,6 @@ import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
 import CircularIndeterminate from "../components/Global/loading.js";
 import {
   OptionsSelection,
@@ -57,13 +56,13 @@ export const SearchButton = ({ onClick, clicked }) => {
 };
 
 export function ClassOptionsSelection({ options, optionName, onSelect }) {
-  const [selectedClass, setSelectedClass] = useState("personal");
+  const [selectedClass, setSelectedClass] = useState("收容所");
   const navigate = useNavigate();
   const handleOptionChange = (selected) => {
     setSelectedClass(selected);
     onSelect(selected.value);
-    if (selected.value === "收容所") {
-      navigate("/shelters");
+    if (selected.value === "個人送養") {
+      navigate("/");
     }
   };
   return (
@@ -82,9 +81,10 @@ const Selection = ({
   setSelectedLocation,
   setSelectedPetType,
   setClicked,
-  clicked
+  clicked,
 }) => {
-  const [selectedClass, setSelectedClass] = useState("personal");
+  const [selectedClass, setSelectedClass] = useState("收容所");
+  const [breedOptions, setBreedOptions] = useState([]);
 
   const handlePetTypeChange = (newPetType) => {
     setSelectedPetType(newPetType);
@@ -118,12 +118,13 @@ const Selection = ({
     "金門縣",
     "連江縣",
   ];
+
   return (
     <>
       <IconContainer>
         <ClassOptionsSelection
           options={classOption}
-          optionName={"個人"}
+          optionName={"收容所"}
           onSelect={(option) => setSelectedClass(option)}
         />
         <div>
@@ -159,54 +160,40 @@ const Selection = ({
   );
 };
 
-export function Home() {
-  const [isFetchingNextPage, setIsFetchingNextPage] = useState(false);
+export function HomeShelter() {
   const [breed, setBreed] = useState("");
   const [selectedPetType, setSelectedPetType] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [isFetchingGovDataNextPage, setIsFetchingGovDataNextPage] =
+    useState(false);
   const [clicked, setClicked] = useState(false);
 
-  const navigate = useNavigate();
   const useCategorizedPets = ({ breed, location, petType }) => {
-    const queryKey = ["categorizedPets", { breed, location, petType }];
+    const govQueryKey = ["categorizedPets", { breed, location, petType }];
 
     return useInfiniteQuery(
-      queryKey,
+      govQueryKey,
       async ({ pageParam = 0 }) => {
-        let apiUrl = `${process.env.REACT_APP_PETS_LIST_API_URL}`;
-        try {
-          if (breed || location || petType) {
-            apiUrl += `/conditions/`;
+        let apiUrl = `${process.env.REACT_APP_PETS_LIST_API_URL}/shelters/`;
 
-            if (breed) apiUrl += `&type=${encodeURIComponent(breed)}`;
-            if (location && location !== "不限區域")
-              apiUrl += `&city=${encodeURIComponent(location)}`;
-            if (petType && petType !== "不限種類")
-              apiUrl += `&animalClass=${encodeURIComponent(petType)}`;
-          } else {
-            apiUrl += `/all?paging=${pageParam}`;
-          }
-          const response = await axios(apiUrl);
-          return response.data;
-        } catch (error) {
-          throw error;
+        if (breed || location || petType) {
+          apiUrl += `conditions/`;
+          if (breed) apiUrl += `&type=${encodeURIComponent(breed)}`;
+          if (location && location !== "不限區域")
+            apiUrl += `&city=${encodeURIComponent(location)}`;
+          if (petType && petType !== "不限種類")
+            apiUrl += `&animalClass=${encodeURIComponent(petType)}`;
+          console.log("apiUrl", apiUrl);
+        } else {
+          apiUrl += `all?paging=${pageParam}`;
         }
+
+        const response = await axios(apiUrl);
+        return response.data;
       },
       {
         getNextPageParam: (lastPage) => {
           return lastPage.next_paging ? lastPage.next_paging : null;
-        },
-        onError: (error) => {
-          if (error.response && error.response.status === 404) {
-              // Navigate back to the home page after showing the alert
-              let apiUrl = `${process.env.REACT_APP_PETS_LIST_API_URL}`;
-              const allAPI = `${apiUrl}/all`
-              const allResponse = axios.get(allAPI)
-              return allResponse.data;
-           
-          } else {
-            console.error("Error fetching data:", error.message);
-          }
         },
       }
     );
@@ -229,18 +216,20 @@ export function Home() {
     const scrollTop = window.innerHeight + window.scrollY;
     const threshold = 150;
 
-    if (scrollTop >= scrollHeight - threshold) {
-      if (hasCategorizedNextPage && !isCategorizedLoading) {
-        setIsFetchingNextPage(true);
-        fetchNextCategorizedPage()
-          .then(() => {
-            setIsFetchingNextPage(false); // Reset loading state after fetching
-          })
-          .then(() => {})
-          .catch(() => {
-            setIsFetchingNextPage(false); // Handle errors and reset loading state
-          });
-      }
+    if (
+      scrollTop >= scrollHeight - threshold &&
+      hasCategorizedNextPage &&
+      !isCategorizedLoading
+    ) {
+      setIsFetchingGovDataNextPage(true);
+      fetchNextCategorizedPage()
+        .then(() => {
+          fetchNextCategorizedPage();
+          setIsFetchingGovDataNextPage(false);
+        })
+        .catch(() => {
+          setIsFetchingGovDataNextPage(false);
+        });
     }
   };
 
@@ -260,24 +249,26 @@ export function Home() {
     return <p>Error fetching data</p>;
   }
 
-  const allPetsData = categorizedPets
-    ? categorizedPets.pages.map((page) => page.data)
+  const allGovPetsData = categorizedPets
+    ? categorizedPets.pages.map((page) => page)
     : [];
-  console.log("allPetsData", allPetsData);
   return (
     <>
       <Selection
+        setBreed={setBreed}
         setSelectedLocation={setSelectedLocation}
         setSelectedPetType={setSelectedPetType}
+        breed={breed}
+        selectedLocation={selectedLocation}
         selectedPetType={selectedPetType}
-        setClicked={setClicked}
         clicked={clicked}
+        setClicked={setClicked}
       />
       <PageDiv>
-        {allPetsData.map((petsData) =>
-          petsData.map((pet) => (
+        {allGovPetsData.map((petsData) =>
+          petsData.data.map((pet) => (
             <PetContainer>
-              <Link to={`/pets/details/${pet.id}`}>
+              <Link to={`/pets/details/${pet.id}?from=shelter`}>
                 <CardContainer>
                   <Card key={pet.id}>
                     <PetMainImg
@@ -288,7 +279,7 @@ export function Home() {
                   <AllInfoContainer>
                     <InfoContainer>
                       <Text style={{ fontSize: "14px", fontWeight: "bold" }}>
-                        {pet.name}
+                        {pet.type}
                       </Text>
                       <Text style={{ fontSize: "10px", color: "#C3C3C3" }}>
                         {pet.location}
@@ -304,7 +295,6 @@ export function Home() {
                       <img
                         src={pet.gender === "male" ? maleImg : femaleImg}
                         style={{ width: "20px" }}
-                        alt="genderimage"
                       />
                     </InfoContainer>
                   </AllInfoContainer>
@@ -313,8 +303,8 @@ export function Home() {
             </PetContainer>
           ))
         )}
-        {hasCategorizedNextPage && isFetchingNextPage ? (
-          <div>
+        {hasCategorizedNextPage ? (
+          <div style={{ display: "flex", flexDirection: "column" }}>
             <CircularIndeterminate />
           </div>
         ) : (

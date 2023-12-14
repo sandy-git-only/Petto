@@ -6,7 +6,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import { setAuthToken, getAuthToken } from "../utils/token.js";
+import { setAuthToken } from "../utils/token.js";
 import { AuthContext } from "../utils/contexts.js";
 import {
   LeftGroup,
@@ -17,16 +17,11 @@ import {
 } from "../components/Members/menu.js";
 import {
   RightGroup,
-  LostAndFound,
-  ReportRescue,
-  MatchList,
-  FollowPets,
-} from "../components/Members/function.js"; // Import your components for different routes
+} from "../components/Members/function.js"; 
 import MatchApplication from "../components/Members/MatchApplicationElement.js";
-import { District } from "../components/Members/region.js";
-// import AdoptionListElement from "../components/Members/MatchListElement.js";
 import MatchListElement from "../components/Members/MatchListElement.js";
 import AdoptionListElement from "../components/Members/AdoptListElement.js";
+const logoutImg = "/images/logout.png";
 
 export function Members() {
   const location = useLocation();
@@ -87,6 +82,7 @@ export function Members() {
           </Link>
         </LinkContainer> */}
         <LinkContainer style={{justifyContent:"center",alignSelf:"center"}}>
+        <TitleImg src={logoutImg} />
         <Text onClick={handleLogout}>登出</Text>
         </LinkContainer>
       </LeftGroup>

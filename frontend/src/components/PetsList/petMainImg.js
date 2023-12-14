@@ -9,4 +9,6 @@ export const PetMainImg = styled.img`
     max-height: 100%;
     border-radius: 20px;
     background-color: #F5F2F2;
+    width: 170px;
+    height: auto;
 `;

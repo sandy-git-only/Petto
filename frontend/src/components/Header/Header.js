@@ -10,7 +10,7 @@ const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: ${({ isMenuOpen }) => (isMenuOpen ? '10px 30px 15px 30px' : '10px 30px')};
+  padding: ${({ isMenuOpen }) => (isMenuOpen ? '10px 30px' : '5px 30px')};
   transition: padding 0.3s ease-in-out;
 `;
 
@@ -18,7 +18,10 @@ const Text = styled.div`
   font-size: 50%;
   position: relative;
   overflow: hidden;
+  border-radius: 8px; 
+  padding :2px;
   &:hover {
+    color: #3d5a80;
     &:before {
       content: '';
       position: absolute;
@@ -26,7 +29,7 @@ const Text = styled.div`
       left: 0;
       width: 100%;
       height: 1px;
-      border-bottom: 1px solid #000; // 你想要的底线颜色
+      border-bottom: 1px solid #000; 
       transform: scaleX(0);
       transform-origin: bottom right;
       transition: transform 0.3s ease; 
@@ -53,7 +56,7 @@ export function Header() {
     <>
     <HeaderContainer isMenuOpen={isMenuOpen}>
       <MenuImgContainer onClick={toggleMenu}>
-        <MenuImg src={isMenuOpen ? './images/close.png' : '/images/stats.svg'} alt='Menu' />
+        <MenuImg src={isMenuOpen ? '/images/close.png' : '/images/stats.svg'} alt='Menu' />
       </MenuImgContainer>
       <Link to="/"><Logo src="/images/petto-logo.png" alt="logo" /></Link>
       {user ? (
@@ -67,7 +70,9 @@ export function Header() {
       )}
     </HeaderContainer>
     <MenuOptions isMenuOpen={isMenuOpen}>
+        <Link to="/pets/missing" style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleTextChange}>
         <Text>走失協尋</Text>
+        </Link>
         <Link to="/pets/create" style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleTextChange}>
         <Text >我要送養</Text>
         </Link>

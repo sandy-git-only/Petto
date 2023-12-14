@@ -4,8 +4,8 @@ export const PageDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 15px;
-  margin: 10px 0;
+  gap: 10px;
+  padding: 10px 5px;
 `;
 export const IconContainer = styled.div`
   gap:20px;

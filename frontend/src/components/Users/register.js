@@ -13,9 +13,10 @@ export const RegisterForm = styled.form`
   flex-direction: column;
   width: 300px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #e9ecef;
   border-radius: 5px;
   gap:20px;
+  background-color: #f8f9fa;
 
 `;
 

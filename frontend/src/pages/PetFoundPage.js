@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 import { useContext } from 'react';
 import { AuthContext } from '../utils/contexts';
 import LoadingOverlay from "../components/Global/progress.js";
-
+const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL
 export function PetFound() {
   const [breed, setBreed] = useState("");
   const [otherBreed, setOtherBreed] = useState("");
@@ -105,8 +105,9 @@ export function PetFound() {
       images.forEach((image) => {
         fileData.append(`images`, image.originFileObj);
       });
+      
       const petsResponse = await axios.post(
-        "http://localhost:3000/api/1.0/pets/create",
+        `${REACT_APP_BASE_URL}/pets/create`,
         fileData,
         {
           headers: {

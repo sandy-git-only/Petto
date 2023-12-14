@@ -22,6 +22,7 @@ const MainButton = styled.div`
   box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.3);
   transition: all 300ms ease;
   transform: ${(props) => (props.active ? 'rotateZ(-45deg)' : 'rotateZ(0)')};
+  background-color: #ebf2fa;
 `;
 
 const OptionsContainer = styled.div`

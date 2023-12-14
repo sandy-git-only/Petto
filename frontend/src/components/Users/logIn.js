@@ -6,7 +6,7 @@ export const LoginContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 80vh;
 `;
 
 export const LoginForm = styled.form`
@@ -14,9 +14,11 @@ export const LoginForm = styled.form`
   flex-direction: column;
   width: 300px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #e9ecef;
   border-radius: 5px;
   gap:20px;
+  background-color: #f8f9fa;
+
 `;
 
 export const InputField = styled.input`

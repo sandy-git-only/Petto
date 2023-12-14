@@ -2,14 +2,14 @@
 import styled from "styled-components";
 
 export const RightGroup = styled.div`
-  width: 100%;
-  height: 100%; 
+  /* width: 100%; */
+  /* height: 100%;  */
   justify-content: center;
   align-items: center;
   margin: auto 0px;
-  border-radius:20px;
+  border-radius:10px;
   background-color: #FFFFFF;
-  padding:10px;
+  margin-bottom:10px;
 `;
 
 // AdoptionList, LostAndFound, ReportRescue, MatchList, FollowPets

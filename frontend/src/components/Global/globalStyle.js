@@ -6,5 +6,6 @@ export const GlobalStyle = createGlobalStyle`
     background-color: #F2F6FF;
     margin: 0; /* Reset margin to remove default body margin */
     padding: 0; /* Reset padding to remove default body padding */
+    font-family: Georgia;
   }
 `;

@@ -3,13 +3,13 @@ import styled from 'styled-components';
 
 export const MenuImgContainer = styled.div`
   cursor: pointer;
-  transition: all 0.3s ease
+  transition: all 0.3s ease;
   
 `;
 export const MenuImg = styled.img`
   width:30px;
   height:30px;
-  transition: all 0.3s ease
+  transition: all 0.3s ease;
 `;
 
 
@@ -19,7 +19,7 @@ export const MenuOptions = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
-
+  margin-bottom: 10px;;
   div {
     font-size: 14px;
     cursor: pointer;

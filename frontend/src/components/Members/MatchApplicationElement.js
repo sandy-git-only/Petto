@@ -23,6 +23,7 @@ const Label = styled.label`
   margin-bottom: 8px;
 `;
 
+const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 
 
 const District = ({onDistrictChange }) => {
@@ -31,7 +32,7 @@ const District = ({onDistrictChange }) => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await axios.get('http://localhost:3000/api/1.0/taiwan-districts');
+          const response = await axios.get(`${REACT_APP_BASE_URL}/taiwan-districts`);
           const formattedOptions = response.data.map(city => {
             const cityOptions = city.districts.map(district => ({
               value: district.name,
@@ -60,7 +61,7 @@ const District = ({onDistrictChange }) => {
       };
   
       fetchData();
-    }, []); // Fetch data only once when the component mounts
+    }, []); 
   
     const handleCascaderChange = (value, selectedOptions) => {
       // Do something with the selected value if needed
@@ -142,16 +143,11 @@ const MatchApplication = () => {
       };
       
 
-      console.log("shelterData",shelterData);
     const handleSubmit = async () =>{
       setLoading(true);
         try {
             const url = "http://localhost:3000/api/1.0/matches/subscribe";
             const response = await axios.post(url, data);
-            const shelterUrl =`https://data.moa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL&$filter=animal_kind=${shelterData.animalClass}&animal_colour=${shelterData.color}&animal_Variety=${shelterData.type}&animal_sex=${shelterData.gender}&shelter_address=${shelterData.city}${shelterData.district}`
-            const shelterResponse = await axios.get(shelterUrl)
-            console.log("shelterUrl",shelterUrl)
-            console.log("shelterResponse",shelterResponse.data);
               const matchResponse = await axios.get(`http://localhost:3000/api/1.0/matches/match-user?userID=${user}`);
               setLoading(false);
               if (response && matchResponse){
@@ -175,13 +171,13 @@ const MatchApplication = () => {
     const breedOptions =
     petType === "dog"
       ? [ { value: null, label: "不限種類" },
-          { value: "米克斯", label: "米克斯 (Mixed)" },
+          { value: "混種犬", label: "米克斯 (Mixed)" },
           { value: "拉布拉多", label: "拉布拉多犬 (Labrador Retriever)" },
           { value: "德國牧羊", label: "德國牧羊犬 (German Shepherd)" },
           { value: "黃金獵犬", label: "黃金獵犬 (Golden Retriever)" },
           { value: "法國鬥牛", label: "法國鬥牛犬 (French Bulldog)" },
           { value: "貴賓", label: "貴賓 (Poodle)" },
-          { value: "西斯梗犬", label: "西斯梗犬 (Shih Tzu)" },
+          { value: "比特", label: "比特 (Pit Bull)" },
           { value: "柴犬", label: "柴犬 (Shiba Inu)" },
           { value: "邊境牧羊", label: "邊境牧羊犬 (Border Collie)" },
           { value: "other", label: "其他" },
@@ -212,9 +208,10 @@ const MatchApplication = () => {
         }}
         layout="horizontal"
         style={{
-          maxWidth: 600,
+          maxWidth: 400,
         }}
         onFinish={handleSubmit}
+        size="small" 
       >
         
         <Form.Item label="通知類別">
