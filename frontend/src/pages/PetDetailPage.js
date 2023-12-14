@@ -253,7 +253,7 @@ export function PetDetail() {
   }
 
   const REACT_APP_MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
-  return !fromGovData && petData.type.length ? (
+  return !fromGovData && petData.type ? (
     <PageDiv>
       <Image
         style={{ borderRadius: "10px" }}
@@ -273,12 +273,12 @@ export function PetDetail() {
           </Card>
           <Card style={{ backgroundColor: "#fefae0" }}>
             <SubTitleInfo
-              style={{ fontSize: petData.type.length >= 3 ? "60%" : "80%" }}
+              style={{ fontSize: petData.type.trim().length >= 3 ? "60%" : "80%" }}
             >
               {petData.type}
             </SubTitleInfo>
             <SubInfo
-              style={{ marginTop: petData.type.length >= 3 ? "3px" : "" }}
+              style={{ marginTop: petData.type.trim().length >= 3 ? "3px" : "" }}
             >
               品種
             </SubInfo>

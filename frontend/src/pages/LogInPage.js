@@ -32,13 +32,14 @@ export const LogIn = () => {
     e.preventDefault();
     // Add your login logic here
     try {
+      setError("");
       if (password.length < 8) {
         console.log(password.length);
         setError("密碼至少為8位數");
         return;
       }
       setError("");
-      const response = await axios.post(`${REACT_APP_BASE_URL}/users/signin`, {
+      const response = await axios.post(`http://46.51.228.163:4000/api/1.0/users/signin`, {
         email,
         password,
       });
