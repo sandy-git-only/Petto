@@ -39,12 +39,13 @@ export const LogIn = () => {
         return;
       }
       setError("");
-      const response = await axios.post(`http://46.51.228.163:4000/api/1.0/users/signin`, {
-        email,
-        password,
-      });
-      const data = await response.data.data;
-      setAuthToken(data.access_token);
+      // const response = await axios.post(`http://46.51.228.163:4000/api/1.0/users/signin`, {
+      //   email,
+      //   password,
+      // });
+      // const data = await response.data.data;
+      setAuthToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxMSwibmFtZSI6IlNhbmR5IiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIn0sImV4cCI6MTcwMjY2NzY1OCwiaWF0IjoxNzAyNTgxMjU4fQ.Jv1XOMaA1R4P_bqnJUzHPRRLD2rerfx4dDCLD_iZmxg")
+      // setAuthToken(data.access_token);
       await getMe().then((response) => {
         if (!response) {
           // 在 getMe() 出錯代表還沒成功登入，因此要把 token 清空
