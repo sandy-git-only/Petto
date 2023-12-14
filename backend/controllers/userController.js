@@ -119,7 +119,7 @@ export async function userSignIn(req, res) {
             };
             // let access_token;
             // try {
-              let access_token = generateJWTAceessToken(payload);
+              let access_token = await generateJWTAceessToken(payload);
 
               // const decodedToken = jwt.verify(
               //   req.token,
@@ -139,7 +139,7 @@ export async function userSignIn(req, res) {
               const successResponse = {
                 data: {
                   access_token: access_token,
-                  access_expired: 3600 * 12,
+                  access_expired: 3600 * 24,
                   user: {
                     id: results[0].id,
                     provider: "native",

@@ -13,10 +13,10 @@ import cors from 'cors';
 dotenv.config();
 // Enable CORS
 app.use(cors());
-app.use(cors({
-  origin: 'https://www.pettotw.com',
-  credentials: true,
-}));
+// app.use(cors({
+//   origin: 'https://www.pettotw.com',
+//   credentials: true,
+// }));
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   next();
