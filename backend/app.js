@@ -50,7 +50,7 @@ app.get(`/api/${API_VERSION}/taiwan-districts`, (req, res) => {
 
 
 const PORT = process.env.PORT
-app.listen(PORT, () => {
+app.listen("4000", () => {
     console.log(`Server is running on port ${PORT}`);
   });
 
