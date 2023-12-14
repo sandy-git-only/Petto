@@ -58,7 +58,7 @@ export function Header() {
       <MenuImgContainer onClick={toggleMenu}>
         <MenuImg src={isMenuOpen ? '/images/close.png' : '/images/stats.svg'} alt='Menu' />
       </MenuImgContainer>
-      <Link to="/"><Logo src="/images/petto-logo.png" alt="logo" /></Link>
+      <Link to="/"><Logo src="/images/petto-logo.PNG" alt="logo" /></Link>
       {user ? (
         <Link to="/members/adoption-list">
           <img src="/images/member.png" alt="member" style={{ maxWidth: '30px', height: 'auto' }}/>
