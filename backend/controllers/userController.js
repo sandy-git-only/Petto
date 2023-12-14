@@ -117,27 +117,29 @@ export async function userSignIn(req, res) {
               email: results[0].email,
               // role: results[0].role,
             };
-            let access_token;
-            try {
-              const decodedToken = jwt.verify(
-                req.token,
-                process.env.JWT_SECRET
-              ); // Use the same secret key used to sign the token
-              if (decodedToken.exp < Date.now() / 1000) {
-                // Token has expired, generate a new one
-                access_token = generateJWTAceessToken(payload);
-              } else {
-                // Token is still valid, use the existing one
-                access_token = req.token;
-              }
-            } catch (verifyError) {
-              // Token verification failed, generate a new one
-              access_token = generateJWTAceessToken(payload);
-            } finally {
+            // let access_token;
+            // try {
+              let access_token = generateJWTAceessToken(payload);
+
+              // const decodedToken = jwt.verify(
+              //   req.token,
+              //   process.env.JWT_SECRET
+              // ); // Use the same secret key used to sign the token
+              // if (decodedToken.exp < Date.now() / 1000) {
+              //   // Token has expired, generate a new one
+              //   access_token = generateJWTAceessToken(payload);
+              // } else {
+              //   // Token is still valid, use the existing one
+              //   access_token = req.token;
+              // }
+            // } catch (verifyError) {
+            //   // Token verification failed, generate a new one
+            //   access_token = generateJWTAceessToken(payload);
+            // } finally {
               const successResponse = {
                 data: {
                   access_token: access_token,
-                  access_expired: 3600,
+                  access_expired: 3600 * 12,
                   user: {
                     id: results[0].id,
                     provider: "native",
@@ -151,7 +153,7 @@ export async function userSignIn(req, res) {
               res.status(200).json(successResponse);
             }
           }
-        } 
+        // } 
         catch (compareError) {
           console.error("Error comparing passwords:", compareError);
           return res.status(500).json({ error: "Internal Server Error." });
