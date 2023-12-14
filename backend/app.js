@@ -21,7 +21,10 @@ app.use((req, res, next) => {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   next();
 });
-
+app.use((req, res, next) => {
+  console.log('Request Headers:', req.headers);
+  next();
+});
 
 app.use(express.json());
 const API_VERSION = "1.0"
