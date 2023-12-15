@@ -402,7 +402,7 @@ export function PetDetail() {
       />
       <TitleBlock>
         <SubTitleBlock>
-          <Name>{petData.animalClass === "狗" ? "Dog" : "Cat"} </Name>
+          <Name>{petData.animalClass === "dog" ? "Dog" : "Cat"} </Name>
           <GenderImage src={petData.gender === "M" ? maleImg : femaleImg} />
         </SubTitleBlock>
         <Text style={{ marginTop: "30px", color: "gray" }}>

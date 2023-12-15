@@ -6,24 +6,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          121.5113064,
-          25.0627243
-        ]
-      },
-      "properties": {
-        "id": 145,
-        "category": "送養",
-        "name": "天天",
-        "img": "https://petto.s3.ap-northeast-1.amazonaws.com/pets-images/lala.jpg",
-        "city": "臺北市",
-        "district": "大同區"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           121.2053963,
           24.8444927
         ]
