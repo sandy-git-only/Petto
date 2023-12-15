@@ -231,6 +231,7 @@ export function PetCreate() {
               <option value="黃色">黃色</option>
               <option value="米色">米色</option>
               <option value="咖啡">咖啡</option>
+              <option value="other">其他顏色</option>
             </Select>
             {color === "other" && (
               <Input

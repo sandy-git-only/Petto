@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const FormContainer = styled.div`
   max-width: 400px;
   width: 100%;
-  margin: 0 auto;
+  margin: 10px auto;
 `;
 
 export const FormGroup = styled.div`
@@ -49,7 +49,7 @@ export const TextArea = styled.textarea`
 `;
 
 export const SubmitButton = styled.button`
-  background-color: #4caf50;
+  background-color: #3d5a80;
   color: white;
   padding: 10px 15px;
   border: none;
