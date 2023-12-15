@@ -79,6 +79,7 @@ const locationImg = "/images/location.png";
 const LostImg = "/images/lost.png";
 const AdoptSmall = "/images/pet-adopt.png";
 const ForAdoptionImg = "/images/pets-marker.png";
+const FoundImg = "/images/search.png";
 const geoJsonFilePath = `${REACT_APP_BASE_URL}/geojson`;
 const location = await axios.get(`${REACT_APP_BASE_URL}/gps`);
 const response = await axios.get(geoJsonFilePath);
@@ -188,7 +189,7 @@ function GoogleMapBlock({
             position={marker.position}
             options={{
               icon: {
-                url: marker.category === "送養" ? ForAdoptionImg : LostImg,
+                url: marker.category === "送養" ? ForAdoptionImg :marker.category === "走失" ? LostImg : FoundImg,
                 scaledSize: new window.google.maps.Size(40, 40),
               },
             }}
@@ -232,7 +233,7 @@ function GoogleMapBlock({
                       }}
                     >
                       <img
-                        src={marker.category == "送養" ? AdoptSmall : LostImg}
+                        src={marker.category == "送養" ? AdoptSmall : marker.category === "走失"? LostImg: FoundImg}
                         alt="adopt-small"
                         style={{ width: "20px", height: "20px" }}
                       />
@@ -286,7 +287,7 @@ const CardBlock = ({ closedPets, setActiveMarker }) => {
           <InfoContainer>
             <InfoTitle>
               <img
-                src={pet.marker.category == "走失" ? LostImg : AdoptSmall}
+                src={pet.marker.category == "走失" ? LostImg : pet.marker.category === "送養" ? AdoptSmall : FoundImg }
                 alt="marker-img"
                 style={{ width: "20px", margin: "auto opx" }}
               />

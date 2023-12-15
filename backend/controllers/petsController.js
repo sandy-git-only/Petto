@@ -66,7 +66,6 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
   const geocode = await geocoder(petlocation);
   try {
     if (geocode) {
-      console.log("geocode",geocode);
       const geoLocation = geocode.results[0].geometry.location;
       const geoData = {
         petID: insertId,
@@ -115,7 +114,8 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
       main_image: mainImageDataUrl,
       images: imageUrlsArray,
     };
-    res.status(200).json(successfullResponse);
+    return successfullResponse
+    // res.status(200).json(successfullResponse);
   } catch (error) {
     console.error("Error inserting pet information", error);
     res.status(500).json({ error: "Internal Server Error" });

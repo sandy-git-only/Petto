@@ -72,6 +72,78 @@
         "city": "南投縣",
         "district": "國姓鄉"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5841779,
+          23.9732022
+        ]
+      },
+      "properties": {
+        "id": 152,
+        "category": "送養",
+        "name": "NONO",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/4cc9e6e931c39552ea2b30b729dd69de.jpg",
+        "city": "花蓮縣",
+        "district": "吉安鄉"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.7696964,
+          24.8214206
+        ]
+      },
+      "properties": {
+        "id": 153,
+        "category": "走失",
+        "name": "豆豆",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/download%20%288%29.jpg",
+        "city": "宜蘭縣",
+        "district": "礁溪鄉"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.2178048,
+          24.9491274
+        ]
+      },
+      "properties": {
+        "id": 154,
+        "category": "拾獲",
+        "name": "米米",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/download%20%289%29.jpg",
+        "city": "桃園市",
+        "district": "平鎮區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.822098,
+          25.103052
+        ]
+      },
+      "properties": {
+        "id": 155,
+        "category": "送養",
+        "name": "Shine",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/download%20%2810%29.jpg",
+        "city": "新北市",
+        "district": "瑞芳區"
+      }
     }
   ]
 }

@@ -46,15 +46,22 @@ export default async function reqPetsLocations(req, res) {
 
     (async () => {
       try {
-        const geoLocations = await reqGeoLocation();
-        const geoJSON = convertToGeoJSON(geoLocations);
-        writeGeoJSONToFile(geoJSON);
-      res.status(200).send({geoJSON: geoJSON});
-
+          const geoLocations = await reqGeoLocation();
+          const geoJSON = await convertToGeoJSON(geoLocations);
+          await writeGeoJSONToFile(geoJSON);
+  
+          // 檢查 res 是否有定義且有 send 方法
+          if (res && res.send) {
+              res.status(200).send({ geoJSON: geoJSON });
+          } else {
+              console.error("回應物件未定義，或者不具有 send 方法。");
+              // 處理錯誤或返回適當的回應
+          }
       } catch (error) {
-        console.error("Error processing GeoLocations:", error);
+          console.error("處理地理位置時發生錯誤:", error);
+          // 處理錯誤或返回適當的回應
       }
-    })();
+  })();
    
   } catch {
     res.status(401).json({ error: "Cannot get Pets locations" });

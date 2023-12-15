@@ -217,7 +217,7 @@ const MatchApplication = () => {
         <Form.Item label="通知類別">
           <Select value={category} onChange={handleCategoryChange}>
             <Select.Option value="領養">我要領養</Select.Option>
-            <Select.Option value="走失">走失通知</Select.Option>
+            {/* <Select.Option value="走失">走失通知</Select.Option> */}
           </Select>
         </Form.Item>
         <Form.Item label="寵物種類 Animal">
