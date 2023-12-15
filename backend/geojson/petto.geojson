@@ -126,6 +126,24 @@
         "city": "屏東縣",
         "district": "屏東市"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.5113064,
+          25.0627243
+        ]
+      },
+      "properties": {
+        "id": 163,
+        "category": "送養",
+        "name": "rewrew",
+        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/images%20%282%29.jpg",
+        "city": "臺北市",
+        "district": "大同區"
+      }
     }
   ]
 }
