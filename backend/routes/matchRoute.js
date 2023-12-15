@@ -8,8 +8,8 @@ const router = express.Router();
 import { auth } from "google-auth-library";
 import AWS from "aws-sdk";
 import { findUserMatches, insertMatchesTable } from "../models/matchModel.js";
-// const creds = new AWS.SharedIniFileCredentials({profile: 'default'});
-// const sns = new AWS.SNS({creds, region:"ap-northeast-1"});
+const creds = new AWS.SharedIniFileCredentials({profile: 'default'});
+const sns = new AWS.SNS({creds, region:"ap-northeast-1"});
 
 // router.post('/', (req, res) =>  createNotifications(req, res) );
 
@@ -17,16 +17,33 @@ import { findUserMatches, insertMatchesTable } from "../models/matchModel.js";
 router.get("/status", (req, res) => res.send({ status: "ok", sns }));
 
 router.post("/subscribe", async (req, res) => {
-  const email = await createNotifications(req, res);
-  // let params = {
+  const {email,category} = await createNotifications(req, res);
+  console.log("category",category);
+  if (category == "走失"){
+      const subject = "Petto - ⚠️ 有寵物走失了，請幫忙留意附近" ;
+      const message =
+      `有寵物走失！請幫忙注意，或是到Petto GPS頁面查看寵物走失地點是否在你的附近喔！
+      謝謝你的幫忙`;
+      let params = {
+          Subject: subject,
+          Message: message,
+          TopicArn: `arn:aws:sns:ap-northeast-1:220687070155:Petto`,
+      };
+      sns.publish(params, (err, data)=>{
+          if(err) console.error(err)
+          // res.send(data)
+      })
+  //   let params = {
   //     Protocol:"EMAIL",
   //     TopicArn:'arn:aws:sns:ap-northeast-1:220687070155:Petto',
-  //     Endpoint: email
+  //     // Endpoint: email
   // }
   // sns.subscribe(params, (err, data)=>{
   //     if(err) console.error(err)
   //     res.send(data)
   // })
+  }
+  
   res.status(200).send("Subscribe successfully!  user email:" + email);
 });
 

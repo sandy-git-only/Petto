@@ -32,7 +32,7 @@ export async function createNotifications(req, res) {
     //   location: location,
     //   gender: gender,
     // };
-    return email;
+    return {email,category};
     // res.status(200).json(successfullResponse);
   } catch (e) {
     console.error(e);
