@@ -46,7 +46,7 @@ export function Members() {
             to="/members/adoption-list"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            <Text>送養名單</Text>
+            <Text>寵物名單</Text>
           </Link>
         </LinkContainer>
         {/* <LinkContainer>

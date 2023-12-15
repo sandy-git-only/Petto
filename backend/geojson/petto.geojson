@@ -24,24 +24,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          120.9474747,
-          24.8238676
-        ]
-      },
-      "properties": {
-        "id": 146,
-        "category": "送養",
-        "name": "米米",
-        "img": "https://stylish-product.s3.ap-northeast-1.amazonaws.com/pets-images/download%20%283%29.jpg",
-        "city": "新竹市",
-        "district": "北區"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           121.2053963,
           24.8444927
         ]
@@ -143,6 +125,24 @@
         "img": "https://stylish-product.s3.amazonaws.com/pets-images/images.jpg",
         "city": "台中市",
         "district": "南屯區"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.4892658,
+          22.6710655
+        ]
+      },
+      "properties": {
+        "id": 161,
+        "category": "走失",
+        "name": "Orange",
+        "img": "https://stylish-product.s3.amazonaws.com/pets-images/images%20%282%29.jpg",
+        "city": "屏東縣",
+        "district": "屏東市"
       }
     }
   ]

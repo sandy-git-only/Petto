@@ -156,7 +156,6 @@ const MatchApplication = () => {
               await Swal.fire({
                 icon: 'success',
                 title: '申請成功！',
-                text: '等待緣分降臨中...',
                 showConfirmButton: false,
                 timer: 1500, 
               });

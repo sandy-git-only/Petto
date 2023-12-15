@@ -158,6 +158,7 @@ export function PetMissing() {
           { value: "俄羅斯藍貓", label: "俄羅斯藍貓 (Russian Blue)" },
           { value: "埃及毛貓", label: "埃及毛貓 (Egyptian Mau)" },
           { value: "布偶貓", label: "布偶貓 (Ragdoll)" },
+          { value: "other", label: "其他" },
         ]
       : [];
 
