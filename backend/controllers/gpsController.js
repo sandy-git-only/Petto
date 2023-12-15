@@ -3,7 +3,6 @@ import fs from "fs";
 
 
 const convertToGeoJSON = (geoLocations) => {
-  console.log(geoLocations);
   const features = geoLocations.map((location) => {
     const petData = location.Pet.dataValues;
     return {
@@ -13,7 +12,7 @@ const convertToGeoJSON = (geoLocations) => {
         coordinates: [parseFloat(location.lng), parseFloat(location.lat)],
       },
       properties: {
-        id: location.id,
+        id: petData.id,
         category: petData.category,
         name: petData.name,
         img: petData.main_image,

@@ -72,11 +72,15 @@ const InfoTitle = styled.div`
   align-items: center;
   gap: 2px;
 `;
+
+const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL
+
 const locationImg = "/images/location.png";
 const LostImg = "/images/lost.png";
 const AdoptSmall = "/images/pet-adopt.png";
 const ForAdoptionImg = "/images/pets-marker.png";
-const geoJsonFilePath = `${process.env.REACT_APP_BASE_URL}/geojson`;
+const geoJsonFilePath = `${REACT_APP_BASE_URL}/geojson`;
+const location = await axios.get(`${REACT_APP_BASE_URL}/gps`);
 const response = await axios.get(geoJsonFilePath);
 const geojsonData = response.data;
 // Extract coordinates from GeoJSON features
@@ -93,19 +97,28 @@ const markers = await geojsonData.features.map((feature) => ({
   },
 }));
 
-function GoogleMapBlock({ closedPets, setClosedPets, onLoad,activeMarker,setActiveMarker }) {
+function GoogleMapBlock({
+  closedPets,
+  setClosedPets,
+  onLoad,
+  activeMarker,
+  setActiveMarker,
+}) {
   const [libraries] = useState(["geometry"]);
   const { isLoaded } = useLoadScript({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GPS_API_KEY,
     libraries,
   });
-  
+
   const [map, setMap] = React.useState(null);
   const [userCenter, setUserCenter] = useState("");
 
   //User's location
   useEffect(() => {
+
+    
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const initialUserCenter = {
@@ -160,7 +173,7 @@ function GoogleMapBlock({ closedPets, setClosedPets, onLoad,activeMarker,setActi
     onLoad(availablePets);
   };
   //Click pets and show information about
-  return isLoaded && userCenter ? (
+  return isLoaded && userCenter && location && geojsonData ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={userCenter}
@@ -190,50 +203,59 @@ function GoogleMapBlock({ closedPets, setClosedPets, onLoad,activeMarker,setActi
                     alignItems: "center",
                   }}
                 >
-                <Link to={`/pets/details/${marker.id}`}>
-                  <img
-                    src={marker.img}
-                    alt="marker-petimg"
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  /></Link>
-                  <div style={{
-                      display: "flex",
-                      flexDirection:"column",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      
-                    }}>
+                  <Link to={`/pets/details/${marker.id}`}>
+                    <img
+                      src={marker.img}
+                      alt="marker-petimg"
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Link>
                   <div
                     style={{
                       display: "flex",
+                      flexDirection: "column",
                       justifyContent: "center",
                       alignItems: "center",
-                      gap: "2px",
                     }}
                   >
-                    <img
-                      src={marker.category=="送養"?AdoptSmall:LostImg}
-                      alt="adopt-small"
-                      style={{ width: "20px", height: "20px" }}
-                    />
-                    <p
+                    <div
                       style={{
-                        color: marker.category == "送養" ? "#0d3b66" : "ff0000",
-                        fontWeight: "bold",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: "2px",
                       }}
                     >
-                      {marker.name}
+                      <img
+                        src={marker.category == "送養" ? AdoptSmall : LostImg}
+                        alt="adopt-small"
+                        style={{ width: "20px", height: "20px" }}
+                      />
+                      <p
+                        style={{
+                          color:
+                            marker.category == "送養" ? "#0d3b66" : "ff0000",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {marker.name}
+                      </p>
+                    </div>
+                    <p
+                      style={{
+                        fontSize: "10px",
+                        marginTop: "-5px",
+                        paddingLeft: "5px",
+                      }}
+                    >
+                      {marker.city}
+                      {marker.district}
                     </p>
-                  </div>
-                  <p style={{ fontSize: "10px", marginTop:"-5px",paddingLeft:"5px"}}>
-                    {marker.city}
-                    {marker.district}
-                  </p>
                   </div>
                 </div>
               </InfoWindowF>
@@ -251,12 +273,16 @@ const CardBlock = ({ closedPets, setActiveMarker }) => {
   const handleCardClick = (markerId) => {
     setActiveMarker(markerId);
   };
+  console.log(closedPets);
   return (
     <CardContainer>
       {closedPets.map((pet) => (
-        <Card key={pet.marker.id} >
-        
-          <Image src={pet.marker.img} alt="Pet_img_inCard" onClick={() => handleCardClick(pet.marker.id)} />
+        <Card key={pet.marker.id}>
+          <Image
+            src={pet.marker.img}
+            alt="Pet_img_inCard"
+            onClick={() => handleCardClick(pet.marker.id)}
+          />
           <InfoContainer>
             <InfoTitle>
               <img
@@ -300,16 +326,24 @@ const GPS = () => {
     <PageDiv>
       {isMapLoaded ? (
         <>
-          <CardBlock closedPets={closedPets} setActiveMarker={setActiveMarker}/>
+          <CardBlock
+            closedPets={closedPets}
+            setActiveMarker={setActiveMarker}
+          />
           <GoogleMapBlock
             setClosedPets={setClosedPets}
             onLoad={handleMapLoad}
-            setActiveMarker={setActiveMarker} 
+            setActiveMarker={setActiveMarker}
             activeMarker={activeMarker}
           />
         </>
       ) : (
-        <GoogleMapBlock setClosedPets={setClosedPets} onLoad={handleMapLoad} setActiveMarker={setActiveMarker} activeMarker={activeMarker} />
+        <GoogleMapBlock
+          setClosedPets={setClosedPets}
+          onLoad={handleMapLoad}
+          setActiveMarker={setActiveMarker}
+          activeMarker={activeMarker}
+        />
       )}
     </PageDiv>
   );

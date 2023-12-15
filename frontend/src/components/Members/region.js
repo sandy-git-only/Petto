@@ -12,7 +12,7 @@ export const District = ({onDistrictChange }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${REACT_APP_BASE_URL}/api/1.0/taiwan-districts`);
+        const response = await axios.get(`${REACT_APP_BASE_URL}/taiwan-districts`);
         const formattedOptions = response.data.map(city => {
           const cityOptions = city.districts.map(district => ({
             value: district.name,

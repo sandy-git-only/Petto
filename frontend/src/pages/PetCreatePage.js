@@ -117,10 +117,13 @@ export function PetCreate() {
           },
         }
       );
+      console.log("petResponse",petsResponse);
+      if (petsResponse){
+        await axios.get(`${REACT_APP_BASE_URL}/gps`);
+        await axios.get(`${REACT_APP_BASE_URL}/geojson`);
+        await axios.post(`${REACT_APP_BASE_URL}/matches/publish`);
+      }
       
-      await axios.get(`${REACT_APP_BASE_URL}/gps`);
-      await axios.get(`${REACT_APP_BASE_URL}/geojson`);
-      await axios.post(`${REACT_APP_BASE_URL}/matches/publish`);
       setLoading(false);
       
     } catch (error) {
@@ -162,6 +165,7 @@ export function PetCreate() {
           { value: "俄羅斯藍貓", label: "俄羅斯藍貓 (Russian Blue)" },
           { value: "埃及毛貓", label: "埃及毛貓 (Egyptian Mau)" },
           { value: "布偶貓", label: "布偶貓 (Ragdoll)" },
+          { value: "other", label: "其他" },
         ]
       : [];
 
@@ -220,7 +224,7 @@ export function PetCreate() {
             <Label>顏色 Color</Label>
             <Select value={color} onChange={handleColorChange}>
               <option value="" disabled>
-                請選擇寵物種類
+                請選擇寵物顏色
               </option>
               <option value="白色">白色</option>
               <option value="黑色">黑色</option>

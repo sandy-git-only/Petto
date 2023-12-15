@@ -62,19 +62,25 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
   // console.log("location": JSON.parse);
   // insert into GeoLocation Table
   const petlocation = result.city + result.district + result.address;
+  console.log("location",petlocation)
   const geocode = await geocoder(petlocation);
-  if (geocode) {
-    console.log(geocode.results[0]);
-    const geoLocation = geocode.results[0].geometry.location;
-    const geoData = {
-      petID: insertId,
-      lat: geoLocation.lat,
-      lng: geoLocation.lng,
-    };
-    const geoResponse = await insertGeoLocationDB(geoData);
-    if (geoResponse) {
-      reqPetsLocations();
+  try {
+    if (geocode) {
+      console.log("geocode",geocode);
+      const geoLocation = geocode.results[0].geometry.location;
+      const geoData = {
+        petID: insertId,
+        lat: geoLocation.lat,
+        lng: geoLocation.lng,
+      };
+      const geoResponse = await insertGeoLocationDB(geoData);
+      console.log("geoResponse",geoResponse);
+      if (geoResponse) {
+        reqPetsLocations();
+      }
     }
+  } catch (error) {
+    console.error('An geometry error occurred:', error);
   }
 
   const imageUrlsArray = Object.values(imagesUrls);
@@ -339,14 +345,16 @@ export async function reqPetsByCondition(req, res, conditionValue) {
 
 export async function reqPetsDetailByUserId(req, res) {
   const userID = req.query.userID;
-  const cacheKey = `pet:${userID}`;
+  // const cacheKey = `pet:${userID}`;
   try {
-    let results = await redisCache(
-      async () => getPetsDetailByUserId(userID),
-      cacheKey,
-      req,
-      res
-    );
+    // let results = await redisCache(
+    //   async () => getPetsDetailByUserId(userID),
+    //   cacheKey,
+    //   req,
+    //   res
+    // );
+    let results = await getPetsDetailByUserId(userID)
+    console.log(results);
     const petsResults = results.pets;
     // console.log("results....",results.pets);
     const petsDetails = await petsResults.map((result) => {
