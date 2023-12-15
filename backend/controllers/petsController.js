@@ -63,8 +63,9 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
   // insert into GeoLocation Table
   const petlocation = result.city + result.district + result.address;
   console.log("location",petlocation)
-  const geocode = await geocoder(petlocation);
   try {
+  const geocode = await geocoder(petlocation);
+  
     if (geocode) {
       const geoLocation = geocode.results[0].geometry.location;
       const geoData = {

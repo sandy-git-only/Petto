@@ -3,6 +3,7 @@ import fs from "fs";
 
 
 const convertToGeoJSON = (geoLocations) => {
+  try {
   const features = geoLocations.map((location) => {
     const petData = location.Pet.dataValues;
     return {
@@ -27,6 +28,10 @@ const convertToGeoJSON = (geoLocations) => {
   };
 
   return geoJSON;
+} catch (e) {
+  throw e
+}
+
 };
 
 export default async function reqPetsLocations(req, res) {
