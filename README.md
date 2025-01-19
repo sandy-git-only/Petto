@@ -14,6 +14,7 @@
     - RESTful API
     - ORM
 
+---
 ### Main features
 1. Notification
     - AWS SES(Amazon Email Simple Service)
@@ -26,6 +27,7 @@
 3. Redis cache: Improved web data loading speed by 20x with Redis caching.
 4. Integration with Government Shelters API
 
+---
 ### Demo
 - Home Page
 <a name="home_page"></a>
@@ -49,7 +51,7 @@
 <a name="personal_notification"></a>
 ![alt text](./images/personal_match.png)
 
-
+---
 ### Architecture
 <a name="architecture"></a>
 ![alt text](./images/structure.png)
