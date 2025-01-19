@@ -31,7 +31,6 @@ export async function createPetsInfo(mainImageDataUrl, imagesUrls, req, res) {
     vaccine,
     ligation,
     description,
-    color,
     feature,
     userID,
   } = requestData;
